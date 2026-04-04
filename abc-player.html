@@ -1988,10 +1988,10 @@ lht-help-tooltip:not([data-initialized="true"]) * {
           </span>
           <span>Mikuku's abc-player</span>
           <lht-help-tooltip label="About Mikuku's abc-player" wide>
-            Mikuku's abc-player is a browser-based local ABC playback and preview tool derived from mikuscore.
-            It focuses on loading ABC, previewing score rendering, playing back quickly, and keeping lightweight inherited edit and export capability available.
+            Mikuku's abc-player is a browser-based local tool derived from mikuscore that can load multiple supported formats and open them as ABC.
+            It focuses on previewing score rendering, playing back quickly, and keeping lightweight inherited edit and export capability available.
             It is smartphone-centered, but it can also be used on PCs.
-            Workflow: 1) Load ABC 2) Check the score preview 3) Play back quickly 4) Make lightweight adjustments or export when needed.
+            Workflow: 1) Load a supported file or ABC text 2) Open it as ABC 3) Check the score preview 4) Play back quickly 5) Make lightweight adjustments or export when needed.
           </lht-help-tooltip>
           <a
             href="https://github.com/igapyon/abc-player"
@@ -2033,8 +2033,8 @@ lht-help-tooltip:not([data-initialized="true"]) * {
             <span class="ms-step-no">1</span>Input
             <lht-help-tooltip label="Input help">
               <span class="ms-section-help-tooltip">
-                Load your ABC here from file or source text.
-                abc-player focuses on ABC input and keeps score preview, playback, lightweight edit, and output workflows available after loading.
+                Load ABC directly, or load another supported file and open it as ABC.
+                Non-ABC inputs are normalized through MusicXML before preview, playback, lightweight edit, and output workflows continue.
               </span>
             </lht-help-tooltip>
           </h2>
@@ -10398,21 +10398,18 @@ const applyAbcPlayerRestrictions = () => {
     const inputHelp = q('lht-help-tooltip[label="Input help"] .ms-section-help-tooltip');
     if (inputHelp) {
         inputHelp.textContent =
-            "Load your ABC here from file or source text. abc-player restricts input to ABC while keeping score preview, playback, lightweight edit, and output workflows available after loading.";
+            "Load ABC directly, or load another supported file and open it as ABC. Non-ABC inputs are normalized through MusicXML before preview, playback, lightweight edit, and output workflows continue.";
     }
     const inputEntryNew = q("#inputEntryNew");
     const inputEntrySource = q("#inputEntrySource");
     const inputEntryFile = q("#inputEntryFile");
     const sourceTypeAbc = q("#sourceTypeAbc");
-    const sourceTypeXml = q("#sourceTypeXml");
     const sourceTypeMuseScore = q("#sourceTypeMuseScore");
     const sourceTypeVsqx = q("#sourceTypeVsqx");
     const sourceTypeMei = q("#sourceTypeMei");
     const sourceTypeLilyPond = q("#sourceTypeLilyPond");
     if (sourceTypeAbc)
         sourceTypeAbc.checked = true;
-    if (sourceTypeXml)
-        sourceTypeXml.checked = false;
     if (sourceTypeMuseScore)
         sourceTypeMuseScore.checked = false;
     if (sourceTypeVsqx)
@@ -10440,14 +10437,6 @@ const applyAbcPlayerRestrictions = () => {
     hide("#zipEntrySelectBlock");
     hide("#copyAiJsonPromptBtn");
     hide("#downloadMeasureJsonBtn");
-    const fileInput = q("#fileInput");
-    if (fileInput) {
-        fileInput.setAttribute("accept", ".abc,text/vnd.abc,application/abc,text/x-abc,text/plain");
-    }
-    const fileSelect = q("lht-file-select");
-    if (fileSelect) {
-        fileSelect.setAttribute("accept", ".abc,text/vnd.abc,application/abc,text/x-abc,text/plain");
-    }
     if (inputEntryFile && !(inputEntrySource === null || inputEntrySource === void 0 ? void 0 : inputEntrySource.checked)) {
         inputEntryFile.checked = true;
     }
@@ -13616,6 +13605,17 @@ const state = {
     lastSuccessfulSaveXml: "",
     importWarningSummary: "",
 };
+const convertLoadedMusicXmlToAbc = (xml) => {
+    const doc = (0, musicxml_io_1.parseMusicXmlDocument)(xml);
+    if (!doc)
+        return null;
+    try {
+        return (0, abc_io_1.exportMusicXmlDomToAbc)(doc);
+    }
+    catch (_a) {
+        return null;
+    }
+};
 let isPlaying = false;
 const DEBUG_LOG = false;
 let verovioRenderSeq = 0;
@@ -15920,8 +15920,9 @@ const onLoadClick = async () => {
             renderAll();
             return;
         }
-        if (result.nextAbcInputText !== undefined) {
-            abcInput.value = result.nextAbcInputText;
+        const nextAbcInputText = result.nextAbcInputText !== undefined ? result.nextAbcInputText : convertLoadedMusicXmlToAbc(result.xmlToLoad);
+        if (nextAbcInputText !== null && nextAbcInputText !== undefined) {
+            abcInput.value = nextAbcInputText;
         }
         if (result.nextXmlInputText !== undefined) {
             xmlInput.value = result.nextXmlInputText;

@@ -6,7 +6,7 @@ This document defines how `abc-player` should be presented and understood as a p
 
 ## Short Definition
 
-`abc-player` is a playback-first, preview-first ABC notation web app.
+`abc-player` is a playback-first, preview-first ABC-centered notation web app.
 
 It is derived from `mikuscore`, but it is not positioned as a strong score editor.
 
@@ -15,6 +15,7 @@ It is derived from `mikuscore`, but it is not positioned as a strong score edito
 The main user value is:
 
 - load ABC quickly
+- open supported non-ABC formats as ABC
 - preview the score
 - listen to the result
 - make small adjustments if needed
@@ -31,6 +32,7 @@ The project intentionally uses `player` as its identity because:
 
 - paste ABC text and hear it
 - import an ABC file and verify it
+- import a supported non-ABC file and inspect the generated ABC
 - preview score rendering from ABC
 - do small corrections before replaying
 - export when needed through inherited `mikuscore` functionality
@@ -64,6 +66,7 @@ These are useful, but not the main reason the app exists.
 - lightweight edit/export surfaces
 
 `abc-player` narrows the product around ABC playback, preview, and lightweight conversion.
+Supported non-ABC imports are acceptable when they are normalized through MusicXML and opened as ABC for the user-facing workflow.
 
 ## Messaging Rule
 
@@ -71,6 +74,7 @@ When describing the app in README, docs, UI copy, or future release notes:
 
 - emphasize playback first
 - emphasize preview/check workflow second
+- describe non-ABC import as "opened as ABC" rather than as a general conversion workbench
 - mention editing/export only as lightweight inherited capability
 
 ## Summary
@@ -78,4 +82,4 @@ When describing the app in README, docs, UI copy, or future release notes:
 The right mental model is:
 
 - `mikuscore`: broader score tool with lightweight editing
-- `abc-player`: ABC-focused player with inherited lightweight editing/export
+- `abc-player`: ABC-centered player that can open supported formats as ABC, with inherited lightweight editing/export

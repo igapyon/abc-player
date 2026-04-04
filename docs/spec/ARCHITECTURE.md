@@ -14,7 +14,7 @@ The architecture intentionally stays close to `mikuscore`, with simplification c
   - reused UI/build references
 - `App layer`
   - `abc-player` specific UI
-  - ABC-focused input restriction
+  - ABC-centered input presentation
   - product-specific state and adapter code
 
 ## UI vs Processing Boundary
@@ -26,6 +26,8 @@ The architecture intentionally stays close to `mikuscore`, with simplification c
   - playback controls
   - diagnostics display
 - Processing / reuse layer:
+  - format import into MusicXML
+  - MusicXML to ABC conversion
   - ABC parsing / conversion
   - playback event building
   - score-related document handling
@@ -40,7 +42,9 @@ The largest architectural simplification relative to `mikuscore` is at the input
 
 - expose ABC file input
 - expose ABC text input
-- remove broader multi-format import surface from the initial app UI
+- allow supported non-ABC file import when it is normalized through MusicXML and then exposed as ABC in the user-facing workflow
+
+`abc-player` SHOULD NOT expose format-specific complexity as the main product identity.
 
 ## Retained Surface Rule
 

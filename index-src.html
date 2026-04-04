@@ -190,11 +190,11 @@
     <section class="lang-block" aria-label="English What is this">
       <h2>What is this?</h2>
       <p class="lead">
-        <code>abc-player</code> is a single-file web app for loading ABC notation, previewing the rendered score, and playing it back locally in the browser.
+        <code>abc-player</code> is a single-file web app that can load multiple supported formats, open them as ABC, and let you preview, play back, and make lightweight adjustments locally in the browser.
       </p>
       <ul>
         <li>Runs locally in the browser without server communication.</li>
-        <li>Focused on ABC playback, preview, and lightweight conversion.</li>
+        <li>Focused on opening supported formats as ABC for playback, preview, and lightweight conversion.</li>
         <li>Derived from <code>mikuscore</code> and keeps some lightweight inherited edit and output capability.</li>
       </ul>
     </section>
@@ -205,6 +205,7 @@
       <h2>Features</h2>
       <ul>
         <li>Load ABC from file input or source text.</li>
+        <li>Import supported non-ABC files and open them as ABC after MusicXML normalization.</li>
         <li>Preview score rendering in the browser.</li>
         <li>Play back the loaded score locally.</li>
         <li>Use lightweight inherited editing and output functions when needed.</li>
@@ -219,6 +220,7 @@
       <ul>
         <li>Paste ABC text and hear it quickly.</li>
         <li>Import an ABC file and verify the result.</li>
+        <li>Import a supported non-ABC file and inspect it as generated ABC.</li>
         <li>Preview score rendering before sharing or exporting.</li>
         <li>Make small confirmation-oriented adjustments before replaying.</li>
         <li>Export loaded ABC into MIDI, MusicXML, and other score-related formats when conversion is needed.</li>
@@ -231,7 +233,7 @@
       <h2>How to use</h2>
       <ol>
         <li>Open <code>abc-player.html</code> in a web browser.</li>
-        <li>Load ABC from a file or paste ABC source text.</li>
+        <li>Load ABC from a file, paste ABC source text, or import another supported format.</li>
         <li>Preview the score and use playback.</li>
         <li>Use lightweight edit or output functions when needed.</li>
       </ol>
@@ -246,8 +248,9 @@
     <section class="lang-block" aria-label="English How it works">
       <h2>How it works</h2>
       <ul>
-        <li>Load ABC in the browser.</li>
-        <li>Convert ABC into internal score data through reused <code>mikuscore</code> assets.</li>
+        <li>Load ABC directly or import another supported format in the browser.</li>
+        <li>Normalize non-ABC input through MusicXML via reused <code>mikuscore</code> assets.</li>
+        <li>Open the loaded content as ABC.</li>
         <li>Render the score for preview.</li>
         <li>Play back the score locally in the browser.</li>
       </ul>
@@ -261,8 +264,8 @@
         <figure class="shot-card">
           <img src="./docs/screenshots/screen01.png" alt="abc-player input screen" loading="lazy" />
           <figcaption>
-            English: Input screen for providing the ABC score text you want to use, either by loading a file or by pasting the text directly.<br />
-            日本語: 使用したい ABC 譜面テキストを、ファイル読み込みまたは直接貼り付けで与えるための Input 画面です。
+            English: Input screen for providing ABC directly or importing another supported format that will be normalized through MusicXML and opened as ABC.<br />
+            日本語: ABC を直接入力するか、他の対応形式を読み込んで MusicXML 正規化経由で ABC として開くための Input 画面です。
           </figcaption>
         </figure>
         <figure class="shot-card">
@@ -294,11 +297,11 @@
     <section class="lang-block" aria-label="Japanese What is this">
       <h2>What is this?</h2>
       <p class="lead">
-        <code>abc-player</code> は、ABC 記法をローカルで読み込み、譜面プレビューと再生をブラウザ内で行う Single-file Web App です。
+        <code>abc-player</code> は、複数の対応形式を読み込んで ABC として開き、譜面プレビュー、再生、軽微修正をブラウザ内で行える Single-file Web App です。
       </p>
       <ul>
         <li>ブラウザ内でローカルに動作し、サーバ通信を行いません。</li>
-        <li>ABC の再生とプレビューそして簡易変換を主目的にしています。</li>
+        <li>対応形式を ABC として開き、再生、プレビュー、簡易変換に使うことを主目的にしています。</li>
         <li><code>mikuscore</code> をベースにしつつ、軽量な編集・出力機能を一部引き継ぎます。</li>
       </ul>
     </section>
@@ -309,6 +312,7 @@
       <h2>Features</h2>
       <ul>
         <li>ABC ファイル入力と ABC テキスト入力に対応します。</li>
+        <li>ABC 以外の対応形式も MusicXML 正規化を経て ABC として開けます。</li>
         <li>ブラウザ内で譜面プレビューを表示します。</li>
         <li>読み込んだ譜面をローカル再生できます。</li>
         <li>必要に応じて、引き継いだ軽量な編集・出力機能を利用できます。</li>
@@ -323,6 +327,7 @@
       <ul>
         <li>ABC テキストを貼り付けてすぐに音を確認したい。</li>
         <li>ABC ファイルを読み込んで内容を確認したい。</li>
+        <li>ABC 以外の対応形式を読み込み、生成された ABC として確認したい。</li>
         <li>共有や書き出しの前に譜面表示を確認したい。</li>
         <li>再生前に小さな確認用修正を行いたい。</li>
         <li>必要に応じて、読み込んだ ABC を MIDI や MusicXML などの譜面関連形式へ書き出したい。</li>
@@ -335,7 +340,7 @@
       <h2>How to use</h2>
       <ol>
         <li>Webブラウザで <code>abc-player.html</code> を開きます。</li>
-        <li>ABC ファイルを読み込むか、ABC テキストを貼り付けます。</li>
+        <li>ABC ファイルを読み込むか、ABC テキストを貼り付けるか、他の対応形式を取り込みます。</li>
         <li>譜面をプレビューし、再生します。</li>
         <li>必要に応じて軽量な編集や出力機能を使います。</li>
       </ol>
@@ -350,8 +355,9 @@
     <section class="lang-block" aria-label="Japanese How it works">
       <h2>How it works</h2>
       <ul>
-        <li>ブラウザ内で ABC を読み込みます。</li>
-        <li>再利用している <code>mikuscore</code> アセットを通じて内部の譜面データへ変換します。</li>
+        <li>ブラウザ内で ABC を直接読み込むか、他の対応形式を取り込みます。</li>
+        <li>ABC 以外の入力は、再利用している <code>mikuscore</code> アセットを通じて MusicXML に正規化します。</li>
+        <li>正規化後の内容を ABC として開きます。</li>
         <li>譜面を描画してプレビューします。</li>
         <li>ブラウザ内でローカル再生します。</li>
       </ul>

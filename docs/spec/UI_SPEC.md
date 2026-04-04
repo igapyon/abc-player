@@ -21,14 +21,15 @@ The top-level single-page flow SHOULD remain close to `mikuscore`:
 
 ## Input Behavior
 
-The initial `Input` panel SHOULD be narrowed to ABC-focused entry.
+The `Input` panel SHOULD remain ABC-centered while allowing broader file import.
 
 ### Supported entry modes
 
 - ABC file input
 - ABC source text input
+- supported non-ABC file input that is normalized through MusicXML and then opened as ABC
 
-### Removed import modes from UI
+### Removed direct source modes from UI
 
 - MusicXML input
 - MuseScore input
@@ -37,9 +38,12 @@ The initial `Input` panel SHOULD be narrowed to ABC-focused entry.
 - MEI input
 - LilyPond input
 
+These direct source-specific text entry surfaces MAY stay hidden even when file import for the same formats is supported.
+
 ### Notes
 
 - ABC text input SHOULD be preserved or created explicitly if missing in the derived UI
+- imported non-ABC files SHOULD appear to the user as ABC after MusicXML normalization
 - if a `New Score` surface remains temporarily, it SHOULD be treated as optional and subject to later review
 
 ## Score Behavior
@@ -75,6 +79,7 @@ Rationale:
 Even if `Edit` and `Output` remain present, UI wording SHOULD gradually present the app as:
 
 - an ABC player
+- a tool that can open supported formats as ABC
 - a preview/check tool
 - a lightweight derivative of `mikuscore`
 

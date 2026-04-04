@@ -17,6 +17,7 @@ Scope note:
 Its main job is:
 
 - accept ABC input
+- accept supported non-ABC formats and open them as ABC after MusicXML normalization
 - preview score rendering
 - play back score content
 
@@ -34,10 +35,11 @@ Supported initial entry routes SHOULD be:
 
 - ABC file import
 - ABC text input
+- supported non-ABC file import with user-facing ABC presentation after MusicXML normalization
 
-## 2.2 Removed Input Surface
+## 2.2 Removed Direct Input Surface
 
-Compared with `mikuscore`, the initial `abc-player` UI SHOULD remove direct input surface for:
+Compared with `mikuscore`, the initial `abc-player` UI SHOULD remove direct source-specific text input surface for:
 
 - MusicXML
 - MuseScore
@@ -49,6 +51,11 @@ Compared with `mikuscore`, the initial `abc-player` UI SHOULD remove direct inpu
 ## 2.3 Internal Representation
 
 Even though the user-facing input is ABC, downstream processing MAY continue through MusicXML-compatible internal representation inherited from `mikuscore`.
+For non-ABC imports, the expected flow is:
+
+- source file
+- normalize to MusicXML
+- generate user-facing ABC
 
 ---
 
@@ -138,7 +145,7 @@ Default rule:
 The current intended MVP interpretation is:
 
 - start from `mikuscore`
-- restrict `Input` to ABC-focused entry
+- keep `Input` ABC-centered while allowing supported file import routes that open as ABC
 - preserve `Score`
 - preserve `Edit`
 - preserve `Output`
