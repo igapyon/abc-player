@@ -242,6 +242,16 @@ const state: UiState = {
   importWarningSummary: "",
 };
 
+const convertLoadedMusicXmlToAbc = (xml: string): string | null => {
+  const doc = parseMusicXmlDocument(xml);
+  if (!doc) return null;
+  try {
+    return exportMusicXmlDomToAbc(doc);
+  } catch {
+    return null;
+  }
+};
+
 let isPlaying = false;
 const DEBUG_LOG = false;
 let verovioRenderSeq = 0;
@@ -2684,8 +2694,10 @@ const onLoadClick = async (): Promise<void> => {
       return;
     }
 
-    if (result.nextAbcInputText !== undefined) {
-      abcInput.value = result.nextAbcInputText;
+    const nextAbcInputText =
+      result.nextAbcInputText !== undefined ? result.nextAbcInputText : convertLoadedMusicXmlToAbc(result.xmlToLoad);
+    if (nextAbcInputText !== null && nextAbcInputText !== undefined) {
+      abcInput.value = nextAbcInputText;
     }
     if (result.nextXmlInputText !== undefined) {
       xmlInput.value = result.nextXmlInputText;

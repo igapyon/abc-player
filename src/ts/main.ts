@@ -59,21 +59,19 @@ const applyAbcPlayerRestrictions = (): void => {
   const inputHelp = q<HTMLElement>('lht-help-tooltip[label="Input help"] .ms-section-help-tooltip');
   if (inputHelp) {
     inputHelp.textContent =
-      "Load your ABC here from file or source text. abc-player restricts input to ABC while keeping score preview, playback, lightweight edit, and output workflows available after loading.";
+      "Load ABC directly, or load another supported file and open it as ABC. Non-ABC inputs are normalized through MusicXML before preview, playback, lightweight edit, and output workflows continue.";
   }
 
   const inputEntryNew = q<HTMLInputElement>("#inputEntryNew");
   const inputEntrySource = q<HTMLInputElement>("#inputEntrySource");
   const inputEntryFile = q<HTMLInputElement>("#inputEntryFile");
   const sourceTypeAbc = q<HTMLInputElement>("#sourceTypeAbc");
-  const sourceTypeXml = q<HTMLInputElement>("#sourceTypeXml");
   const sourceTypeMuseScore = q<HTMLInputElement>("#sourceTypeMuseScore");
   const sourceTypeVsqx = q<HTMLInputElement>("#sourceTypeVsqx");
   const sourceTypeMei = q<HTMLInputElement>("#sourceTypeMei");
   const sourceTypeLilyPond = q<HTMLInputElement>("#sourceTypeLilyPond");
 
   if (sourceTypeAbc) sourceTypeAbc.checked = true;
-  if (sourceTypeXml) sourceTypeXml.checked = false;
   if (sourceTypeMuseScore) sourceTypeMuseScore.checked = false;
   if (sourceTypeVsqx) sourceTypeVsqx.checked = false;
   if (sourceTypeMei) sourceTypeMei.checked = false;
@@ -99,16 +97,6 @@ const applyAbcPlayerRestrictions = (): void => {
   hide("#zipEntrySelectBlock");
   hide("#copyAiJsonPromptBtn");
   hide("#downloadMeasureJsonBtn");
-
-  const fileInput = q<HTMLInputElement>("#fileInput");
-  if (fileInput) {
-    fileInput.setAttribute("accept", ".abc,text/vnd.abc,application/abc,text/x-abc,text/plain");
-  }
-
-  const fileSelect = q<HTMLElement>("lht-file-select");
-  if (fileSelect) {
-    fileSelect.setAttribute("accept", ".abc,text/vnd.abc,application/abc,text/x-abc,text/plain");
-  }
 
   if (inputEntryFile && !inputEntrySource?.checked) {
     inputEntryFile.checked = true;
