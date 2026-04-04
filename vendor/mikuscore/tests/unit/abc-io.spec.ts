@@ -307,6 +307,31 @@ C D E F |`;
     );
   });
 
+  it("ABC->MusicXML tolerates repeat ending markers like [1 and [2", () => {
+    const abc = `X:1
+T:Alternate endings
+M:4/4
+L:1/8
+K:C
+|: C D E F |
+[1 G A B c :|]
+[2 c B A G ||`;
+
+    const xml = convertAbcToMusicXml(abc);
+    const outDoc = parseMusicXmlDocument(xml);
+    expect(outDoc).not.toBeNull();
+    if (!outDoc) return;
+
+    const notes = Array.from(outDoc.querySelectorAll("part > measure > note"));
+    expect(notes.length).toBeGreaterThan(0);
+    expect(outDoc.querySelector('miscellaneous-field[name="mks:diag:count"]')).not.toBeNull();
+
+    const core = new ScoreCore();
+    core.load(xml);
+    const save = core.save();
+    expect(save.ok).toBe(true);
+  });
+
   it("ABC->MusicXML parses trill decoration and grace notes", () => {
     const abc = `X:1
 T:Ornament test
