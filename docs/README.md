@@ -6,6 +6,12 @@ At the current stage, documentation is centered on project direction rather than
 
 ## Current Documents
 
+- [../THIRD_PARTY_NOTICES.md](/Users/igapyon/Documents/git/abc-player/THIRD_PARTY_NOTICES.md)
+  - lists third-party software and reference materials used or referred to by the project
+- [../CONTRIBUTING.md](/Users/igapyon/Documents/git/abc-player/CONTRIBUTING.md)
+  - contribution guide and contribution license notes
+- [../CONTRIBUTORS.md](/Users/igapyon/Documents/git/abc-player/CONTRIBUTORS.md)
+  - contributor acknowledgement list
 - [MIMIC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/MIMIC_POLICY.md)
   - defines how `abc-player` should intentionally mimic `mikuscore`
 - [PRODUCT_POSITIONING.md](/Users/igapyon/Documents/git/abc-player/docs/PRODUCT_POSITIONING.md)

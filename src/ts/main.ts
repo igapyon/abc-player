@@ -1,4 +1,12 @@
 import "../../vendor/mikuscore/src/ts/main";
+import { exportMusicXmlDomToAbc } from "../../vendor/mikuscore/src/ts/abc-io";
+import { parseMusicXmlDocument } from "../../vendor/mikuscore/src/ts/musicxml-io";
+import { sampleXml1 } from "../../vendor/mikuscore/src/ts/sampleXml1";
+import { sampleXml2 } from "../../vendor/mikuscore/src/ts/sampleXml2";
+import { sampleXml3 } from "../../vendor/mikuscore/src/ts/sampleXml3";
+import { sampleXml4 } from "../../vendor/mikuscore/src/ts/sampleXml4";
+import { sampleXml6 } from "../../vendor/mikuscore/src/ts/sampleXml6";
+import { sampleXml7 } from "../../vendor/mikuscore/src/ts/sampleXml7";
 
 const q = <T extends Element>(selector: string): T | null => document.querySelector(selector) as T | null;
 const qa = <T extends Element>(selector: string): T[] => Array.from(document.querySelectorAll(selector)) as T[];
@@ -13,6 +21,34 @@ const hide = (selector: string): void => {
 const setText = (selector: string, value: string): void => {
   const el = q<HTMLElement>(selector);
   if (el) el.textContent = value;
+};
+
+const convertSampleXmlToAbc = (xml: string): string => {
+  const doc = parseMusicXmlDocument(xml);
+  if (!doc) throw new Error("Failed to parse built-in sample MusicXML.");
+  return exportMusicXmlDomToAbc(doc);
+};
+
+const loadSampleAbc = (xml: string): void => {
+  const inputEntrySource = q<HTMLInputElement>("#inputEntrySource");
+  const inputEntryFile = q<HTMLInputElement>("#inputEntryFile");
+  const sourceTypeAbc = q<HTMLInputElement>("#sourceTypeAbc");
+  const abcInput = q<HTMLTextAreaElement>("#abcInput");
+  const loadBtn = q<HTMLButtonElement>("#loadBtn");
+
+  if (inputEntrySource) inputEntrySource.checked = true;
+  if (inputEntryFile) inputEntryFile.checked = false;
+  if (sourceTypeAbc) sourceTypeAbc.checked = true;
+
+  inputEntrySource?.dispatchEvent(new Event("change", { bubbles: true }));
+  sourceTypeAbc?.dispatchEvent(new Event("change", { bubbles: true }));
+
+  if (abcInput) {
+    abcInput.value = convertSampleXmlToAbc(xml);
+    abcInput.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  loadBtn?.click();
 };
 
 const applyAbcPlayerRestrictions = (): void => {
@@ -61,12 +97,8 @@ const applyAbcPlayerRestrictions = (): void => {
   hide("#meiInputBlock");
   hide("#lilyPondInputBlock");
   hide("#zipEntrySelectBlock");
-  hide("#loadSample1Btn");
-  hide("#loadSample2Btn");
-  hide("#loadSample3Btn");
-  hide("#loadSample4Btn");
-  hide("#loadSampleBtn6");
-  hide("#loadSample7Btn");
+  hide("#copyAiJsonPromptBtn");
+  hide("#downloadMeasureJsonBtn");
 
   const fileInput = q<HTMLInputElement>("#fileInput");
   if (fileInput) {
@@ -92,6 +124,31 @@ const applyAbcPlayerRestrictions = (): void => {
   inputEntryFile?.addEventListener("change", refresh);
   inputEntrySource?.addEventListener("change", refresh);
   refresh();
+
+  const sampleBindings: Array<[string, string]> = [
+    ["#loadSample1Btn", sampleXml1],
+    ["#loadSample2Btn", sampleXml2],
+    ["#loadSample3Btn", sampleXml3],
+    ["#loadSample4Btn", sampleXml4],
+    ["#loadSampleBtn6", sampleXml6],
+    ["#loadSample7Btn", sampleXml7],
+  ];
+
+  for (const [selector, xml] of sampleBindings) {
+    const button = q<HTMLButtonElement>(selector);
+    if (!button) continue;
+    button.classList.remove("md-hidden");
+    button.removeAttribute("hidden");
+    button.addEventListener(
+      "click",
+      (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        loadSampleAbc(xml);
+      },
+      true
+    );
+  }
 };
 
 if (document.readyState === "loading") {

@@ -7,11 +7,18 @@ const ENTRY_TS = "src/ts/main.ts";
 const ENTRY_JS = ENTRY_TS.replace(/\.ts$/, ".js");
 const TEMPLATE = "abc-player-src.html";
 const DIST = "abc-player.html";
+const INDEX_TEMPLATE = "index-src.html";
+const INDEX_DIST = "index.html";
 const TMP_DIR = ".abc-player-build";
 
 const normalize = (p) => p.split(path.sep).join("/");
 const toAbs = (relPath) => path.join(ROOT, relPath);
 const readText = (relPath) => readFileSync(toAbs(relPath), "utf8");
+const buildDateText = () => {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
 
 const importRe =
   /(?:import|export)\s+[^"']*?from\s+["'](.+?)["']|import\s*\(\s*["'](.+?)["']\s*\)|import\s+["'](.+?)["']/g;
@@ -137,6 +144,10 @@ const run = () => {
   compileWithTsc(tsModules);
   const jsBundle = bundle(tsModules);
   writeFileSync(toAbs(DIST), inlineTemplate(jsBundle), "utf8");
+  if (existsSync(toAbs(INDEX_TEMPLATE))) {
+    const indexHtml = readText(INDEX_TEMPLATE).replaceAll("{{BUILD_DATE}}", buildDateText());
+    writeFileSync(toAbs(INDEX_DIST), indexHtml, "utf8");
+  }
   rmSync(toAbs(TMP_DIR), { recursive: true, force: true });
 };
 
