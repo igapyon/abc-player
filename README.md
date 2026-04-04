@@ -1,6 +1,6 @@
-# abc-player
+# Mikuku's abc-player
 
-`abc-player` is a browser-based ABC notation player delivered as a single-file web app.
+`Mikuku's abc-player` is a single-file web app for local ABC preview and quick playback, with export to MIDI and other score formats via mikuscore-derived functionality.
 
 This project intentionally reuses and mimics `mikuscore` as much as practical.
 It is not starting from a blank architectural style.
@@ -18,16 +18,16 @@ Current focus:
 
 ## Product Goal
 
-`abc-player` aims to provide a small, local, offline-capable ABC player with:
+`Mikuku's abc-player` aims to provide a small, local, offline-capable ABC player with:
 
 - ABC text input
 - ABC file input
 - score preview
-- playback
-- minimal player controls
+- quick playback
+- export to MIDI and other score formats
 - smartphone-friendly single-page UI
 
-Editing and export may remain available when inherited from `mikuscore`, but they are secondary.
+Lightweight editing and output are inherited from `mikuscore`, but playback and preview remain primary.
 
 ## Relationship to `mikuscore`
 
@@ -41,9 +41,9 @@ The intention is:
 - reuse the `lht-cmn` UI component direction
 - stay close to the same TypeScript and test baseline
 
-`abc-player` is a smaller derived app, not a full clone of `mikuscore`.
+`Mikuku's abc-player` is a smaller derived app, not a full clone of `mikuscore`.
 
-Its primary value is preview and playback, not strong score editing.
+Its primary value is preview, playback, and quick verification, not strong score editing.
 
 ## Development Direction
 
@@ -63,6 +63,7 @@ Primary:
 - load ABC
 - preview score
 - play back quickly
+- export when needed
 - make small confirmation-oriented adjustments when needed
 
 Secondary:
@@ -73,6 +74,50 @@ Secondary:
 Non-goal:
 
 - become a strong full-featured score editor
+
+## Use Cases
+
+- paste ABC text and hear it quickly
+- import an ABC file and verify the result
+- preview score rendering before sharing or exporting
+- make small confirmation-oriented adjustments before replaying
+- export loaded ABC into MIDI, MusicXML, and other score-related formats when conversion is needed
+
+- ABC テキストを貼り付けてすぐに音を確認したい
+- ABC ファイルを読み込んで内容を確認したい
+- 共有や書き出しの前に譜面表示を確認したい
+- 再生前に小さな確認用修正を行いたい
+- 必要に応じて、読み込んだ ABC を MIDI や MusicXML などの譜面関連形式へ書き出したい
+
+## How It Works
+
+- load ABC in the browser
+- convert ABC into internal score data through reused `mikuscore` assets
+- render the score for preview
+- play back the score locally in the browser
+
+- ブラウザ内で ABC を読み込む
+- 再利用している `mikuscore` アセットを通じて内部の譜面データへ変換する
+- プレビュー用に譜面を描画する
+- ブラウザ内で譜面をローカル再生する
+
+## Screenshots
+
+![Input screen](docs/screenshots/screen01.png)
+English: Input screen for providing the ABC score text you want to use, either by loading a file or by pasting the text directly.  
+日本語: 使用したい ABC 譜面テキストを、ファイル読み込みまたは直接貼り付けで与えるための Input 画面です。
+
+![Score screen](docs/screenshots/screen02.png)
+English: Score screen showing rendered notation for visual confirmation together with playback controls.  
+日本語: 描画された譜面を見て内容を確認し、そのまま簡易再生できる Score 画面です。
+
+![Edit screen](docs/screenshots/screen03.png)
+English: Edit screen for lightweight note and measure adjustment inherited from mikuscore.  
+日本語: mikuscore 由来の軽量で簡易な編集機能で、音符などの調整を行う Edit 画面です。
+
+![Output screen](docs/screenshots/screen04.png)
+English: Output screen for exporting the current work as ABC, MIDI, MusicXML, and other score-related formats.  
+日本語: 現在の内容を ABC、MIDI、MusicXML などの譜面関連形式として書き出すための Output 画面です。
 
 ## Repository Layout
 
