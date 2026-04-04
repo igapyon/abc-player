@@ -6,7 +6,7 @@
   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>abc-player</title>
+  <title>Mikuku's abc-player</title>
   <style>
     :root {
       --bg: #f7f5fb;
@@ -135,6 +135,39 @@
       font-size: 0.9rem;
       color: var(--muted);
     }
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (min-width: 720px) {
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .shot-card {
+      margin: 0;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      box-shadow: 0 10px 28px rgba(31, 49, 65, 0.08);
+    }
+    .shot-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--outline-2);
+      background: #f4faf8;
+    }
+    .shot-card figcaption {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       background: var(--code-bg);
@@ -151,8 +184,8 @@
 <body>
   <main class="card">
     <div class="eyebrow">Local Browser Tool</div>
-    <h1>abc-player</h1>
-    <p class="sub">Updated: 2026-04-04</p>
+    <h1>Mikuku's abc-player</h1>
+    <p class="sub">Updated: 2026-04-05</p>
 
     <section class="lang-block" aria-label="English What is this">
       <h2>What is this?</h2>
@@ -161,7 +194,7 @@
       </p>
       <ul>
         <li>Runs locally in the browser without server communication.</li>
-        <li>Focused on ABC playback and preview.</li>
+        <li>Focused on ABC playback, preview, and lightweight conversion.</li>
         <li>Derived from <code>mikuscore</code> and keeps some lightweight inherited edit and output capability.</li>
       </ul>
     </section>
@@ -188,6 +221,7 @@
         <li>Import an ABC file and verify the result.</li>
         <li>Preview score rendering before sharing or exporting.</li>
         <li>Make small confirmation-oriented adjustments before replaying.</li>
+        <li>Export loaded ABC into MIDI, MusicXML, and other score-related formats when conversion is needed.</li>
       </ul>
     </section>
 
@@ -221,6 +255,42 @@
 
     <hr class="divider" />
 
+    <section aria-label="Screenshots">
+      <h2>Screenshots</h2>
+      <div class="gallery">
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen01.png" alt="abc-player input screen" loading="lazy" />
+          <figcaption>
+            English: Input screen for providing the ABC score text you want to use, either by loading a file or by pasting the text directly.<br />
+            日本語: 使用したい ABC 譜面テキストを、ファイル読み込みまたは直接貼り付けで与えるための Input 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen02.png" alt="abc-player score screen" loading="lazy" />
+          <figcaption>
+            English: Score screen showing rendered notation for visual confirmation together with playback controls.<br />
+            日本語: 描画された譜面を見て内容を確認し、そのまま簡易再生できる Score 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen03.png" alt="abc-player edit screen" loading="lazy" />
+          <figcaption>
+            English: Edit screen for lightweight note and measure adjustment inherited from mikuscore.<br />
+            日本語: mikuscore 由来の軽量で簡易な編集機能で、音符などの調整を行う Edit 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen04.png" alt="abc-player output screen" loading="lazy" />
+          <figcaption>
+            English: Output screen for exporting the current work as ABC, MIDI, MusicXML, and other score-related formats.<br />
+            日本語: 現在の内容を ABC、MIDI、MusicXML などの譜面関連形式として書き出すための Output 画面です。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
     <section class="lang-block" aria-label="Japanese What is this">
       <h2>What is this?</h2>
       <p class="lead">
@@ -228,7 +298,7 @@
       </p>
       <ul>
         <li>ブラウザ内でローカルに動作し、サーバ通信を行いません。</li>
-        <li>ABC の再生とプレビューを主目的にしています。</li>
+        <li>ABC の再生とプレビューそして簡易変換を主目的にしています。</li>
         <li><code>mikuscore</code> をベースにしつつ、軽量な編集・出力機能を一部引き継ぎます。</li>
       </ul>
     </section>
@@ -255,6 +325,7 @@
         <li>ABC ファイルを読み込んで内容を確認したい。</li>
         <li>共有や書き出しの前に譜面表示を確認したい。</li>
         <li>再生前に小さな確認用修正を行いたい。</li>
+        <li>必要に応じて、読み込んだ ABC を MIDI や MusicXML などの譜面関連形式へ書き出したい。</li>
       </ul>
     </section>
 
@@ -280,7 +351,7 @@
       <h2>How it works</h2>
       <ul>
         <li>ブラウザ内で ABC を読み込みます。</li>
-        <li>再利用している <code>mikuscore</code> 資産を通じて内部の譜面データへ変換します。</li>
+        <li>再利用している <code>mikuscore</code> アセットを通じて内部の譜面データへ変換します。</li>
         <li>譜面を描画してプレビューします。</li>
         <li>ブラウザ内でローカル再生します。</li>
       </ul>

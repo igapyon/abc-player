@@ -52,9 +52,9 @@ const loadSampleAbc = (xml: string): void => {
 };
 
 const applyAbcPlayerRestrictions = (): void => {
-  document.title = "mikuku's abc-player";
+  document.title = "Mikuku's abc-player";
 
-  setText(".ms-hero-title > span:nth-of-type(2)", "mikuku's abc-player");
+  setText(".ms-hero-title > span:nth-of-type(2)", "Mikuku's abc-player");
 
   const inputHelp = q<HTMLElement>('lht-help-tooltip[label="Input help"] .ms-section-help-tooltip');
   if (inputHelp) {

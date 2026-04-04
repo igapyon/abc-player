@@ -63,7 +63,7 @@ These are useful, but not the main reason the app exists.
 - playback-related logic
 - lightweight edit/export surfaces
 
-`abc-player` narrows the product around ABC playback and preview.
+`abc-player` narrows the product around ABC playback, preview, and lightweight conversion.
 
 ## Messaging Rule
 
