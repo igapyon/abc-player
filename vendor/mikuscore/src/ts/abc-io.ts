@@ -177,6 +177,17 @@ if (typeof window !== "undefined") {
 
 const abcCommon = AbcCommon;
 
+  function parseRepeatEndingMarkerAt(text, idx) {
+    const match = String(text || "").slice(idx).match(/^\[(\d+(?:[,-]\d+)*)/);
+    if (!match) {
+      return null;
+    }
+    return {
+      marker: match[1],
+      nextIdx: idx + match[0].length,
+    };
+  }
+
   function parseTempoFromQ(rawQ, warnings) {
     const raw = String(rawQ || "").trim();
     if (!raw) {
@@ -555,6 +566,14 @@ const abcCommon = AbcCommon;
         }
 
         if (ch === "[") {
+          const repeatEndingMarker = parseRepeatEndingMarkerAt(text, idx);
+          if (repeatEndingMarker) {
+            warnings.push(
+              "line " + entry.lineNo + ": Skipped repeat ending marker: [" + repeatEndingMarker.marker
+            );
+            idx = repeatEndingMarker.nextIdx;
+            continue;
+          }
           const chordResult = parseChordAt(text, idx, entry.lineNo);
           if (!chordResult) {
             warnings.push("line " + entry.lineNo + ": Failed to parse chord notation; skipped.");
