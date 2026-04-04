@@ -470,19 +470,22 @@
               <span class="ms-section-help-tooltip">
                 Output is where you take your work out of mikuscore.
                 The main flow is exporting your edited result as MusicXML.
-                In addition, mikuscore also supports ABC/MEI/LilyPond/MuseScore export, `JSON (Partial)` for bounded AI work, and lightweight MIDI output for quick checks.
+                In addition, mikuscore also supports ABC/MEI/LilyPond/MuseScore export and lightweight MIDI output for quick checks.
                 MIDI export is handy for simple confirmation, while complex production/export work is best done in dedicated software.
               </span>
             </lht-help-tooltip>
           </h2>
           <div class="ms-actions">
-            <button id="downloadBtn" type="button" class="md-button md-button--primary ms-icon-button" disabled>
+            <button id="downloadAbcBtn" type="button" class="md-button md-button--primary ms-icon-button" disabled>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3v12"></path>
-                <path d="M8 11l4 4 4-4"></path>
-                <path d="M4 19h16"></path>
+                <rect x="3.5" y="4.5" width="17" height="15" rx="2.5"></rect>
+                <path d="M8 9l-1.4 5"></path>
+                <path d="M6.7 11.8h2.6"></path>
+                <path d="M12.2 9h2.3a1.7 1.7 0 0 1 0 3.4h-2.3z"></path>
+                <path d="M12.2 12.4h2.5a1.7 1.7 0 0 1 0 3.4h-2.5z"></path>
+                <path d="M18.2 10.2a2.3 2.3 0 1 0 0 4.6"></path>
               </svg>
-              <span>MusicXML</span>
+              <span>ABC</span>
             </button>
             <button id="downloadMidiBtn" type="button" class="md-button md-button--tonal ms-icon-button" disabled>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -496,16 +499,13 @@
               </svg>
               <span>MIDI</span>
             </button>
-            <button id="downloadAbcBtn" type="button" class="md-button md-button--tonal ms-icon-button" disabled>
+            <button id="downloadBtn" type="button" class="md-button md-button--tonal ms-icon-button" disabled>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3.5" y="4.5" width="17" height="15" rx="2.5"></rect>
-                <path d="M8 9l-1.4 5"></path>
-                <path d="M6.7 11.8h2.6"></path>
-                <path d="M12.2 9h2.3a1.7 1.7 0 0 1 0 3.4h-2.3z"></path>
-                <path d="M12.2 12.4h2.5a1.7 1.7 0 0 1 0 3.4h-2.5z"></path>
-                <path d="M18.2 10.2a2.3 2.3 0 1 0 0 4.6"></path>
+                <path d="M12 3v12"></path>
+                <path d="M8 11l4 4 4-4"></path>
+                <path d="M4 19h16"></path>
               </svg>
-              <span>ABC</span>
+              <span>MusicXML</span>
             </button>
             <button id="downloadVsqxBtn" type="button" class="md-button md-button--tonal ms-icon-button" disabled>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
@@ -552,7 +552,7 @@
             </button>
           </div>
           <div class="ms-actions ms-output-actions-secondary">
-            <button id="copyAiJsonPromptBtn" type="button" class="md-button md-button--tonal ms-icon-button">
+            <button id="copyAiJsonPromptBtn" type="button" class="md-button md-button--tonal ms-icon-button md-hidden" hidden>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="9" y="8" width="10" height="11" rx="2"></rect>
                 <path d="M7 15H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v1"></path>
@@ -561,7 +561,7 @@
               </svg>
               <span>AI Prompt</span>
             </button>
-            <button id="downloadMeasureJsonBtn" type="button" class="md-button md-button--tonal ms-icon-button" disabled>
+            <button id="downloadMeasureJsonBtn" type="button" class="md-button md-button--tonal ms-icon-button md-hidden" hidden disabled>
               <svg aria-hidden="true" viewBox="0 0 24 24" class="ms-btn-icon" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="4.5" y="4.5" width="15" height="15" rx="2.5"></rect>
                 <path d="M9 8.5c-1 1-1.5 2.1-1.5 3.5s.5 2.5 1.5 3.5"></path>
