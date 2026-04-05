@@ -30,7 +30,7 @@ K:C
 
     const notes = Array.from(outDoc.querySelectorAll("part > measure > note"));
     expect(notes.length).toBeGreaterThan(0);
-    expect(outDoc.querySelector('miscellaneous-field[name="mks:diag:count"]')).not.toBeNull();
+    expect(outDoc.querySelector('miscellaneous-field[name="mks:diag:count"]')).toBeNull();
 
     const core = new ScoreCore();
     core.load(xml);
@@ -158,8 +158,12 @@ C D E F G A B c d |`;
 
     const abc = exportMusicXmlDomToAbc(srcDoc);
     expect(abc).toContain("%@mks transpose voice=P1 chromatic=-3 diatonic=-2");
-    expect(abc).toContain("%@mks measure voice=P1 measure=1 number=0 implicit=1 repeat=forward");
-    expect(abc).toContain("%@mks measure voice=P1 measure=2 number=1 implicit=0 repeat=backward times=2");
+    expect(abc).toContain("|:");
+    expect(abc).toContain(":|");
+    expect(abc).toContain("%@mks measure voice=P1 measure=1 number=0 implicit=1");
+    expect(abc).toContain("%@mks measure voice=P1 measure=2 number=1 implicit=0");
+    expect(abc).not.toContain("repeat=forward");
+    expect(abc).not.toContain("repeat=backward");
 
     const roundtripXml = convertAbcToMusicXml(abc);
     const outDoc = parseMusicXmlDocument(roundtripXml);
@@ -175,7 +179,7 @@ C D E F G A B c d |`;
     ).toBe("backward");
     expect(
       outDoc.querySelector('part > measure[number="1"] > barline[location="right"] > repeat')?.getAttribute("times")
-    ).toBe("2");
+    ).toBeNull();
     expect(outDoc.querySelector("part > measure > attributes > transpose > chromatic")?.textContent?.trim()).toBe("-3");
     expect(outDoc.querySelector("part > measure > attributes > transpose > diatonic")?.textContent?.trim()).toBe("-2");
   });
@@ -366,12 +370,19 @@ C D E F |`;
     if (!srcDoc) return;
 
     const abc = exportMusicXmlDomToAbc(srcDoc);
-    expect(abc).toContain("%@mks measure voice=P1_s1_v1 measure=1 number=0 implicit=1 repeat=forward");
-    expect(abc).toContain("%@mks measure voice=P1_s1_v1 measure=2 number=1 implicit=0 repeat=backward times=2");
-    expect(abc).toContain("%@mks measure voice=P1_s2_v2 measure=1 number=0 implicit=1 repeat=forward");
-    expect(abc).toContain("%@mks measure voice=P1_s2_v2 measure=2 number=1 implicit=0 repeat=backward times=2");
     expect(abc).toContain("V:P1_s1_v1");
     expect(abc).toContain("V:P1_s2_v2");
+    expect(abc).toContain("|:");
+    expect(abc).toContain(":|");
+    expect(abc).toContain("[1");
+    expect(abc).toContain("%@mks measure voice=P1_s1_v1 measure=1 number=0 implicit=1");
+    expect(abc).toContain("%@mks measure voice=P1_s1_v1 measure=2 number=1 implicit=0");
+    expect(abc).toContain("%@mks measure voice=P1_s1_v1 measure=3 number=2 implicit=0");
+    expect(abc).toContain("%@mks measure voice=P1_s2_v2 measure=1 number=0 implicit=1");
+    expect(abc).toContain("%@mks measure voice=P1_s2_v2 measure=2 number=1 implicit=0");
+    expect(abc).toContain("%@mks measure voice=P1_s2_v2 measure=3 number=2 implicit=0");
+    expect(abc).not.toContain("repeat=forward");
+    expect(abc).not.toContain("repeat=backward");
 
     const roundtripXml = convertAbcToMusicXml(abc);
     const outDoc = parseMusicXmlDocument(roundtripXml);
