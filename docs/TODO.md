@@ -36,6 +36,7 @@
     - run local gates
     - adjust thin `abc-player` acceptance expectations where upstream moved semantics from `%@mks` into standard ABC surface syntax
     - treat upstream changes as unnecessary unless a real downstream pain remains after that
+  - Progress (2026-04-06): confirmed a later same-day upstream batch (`37066f8` -> `c3f3fd9`) imported cleanly with no `abc-player` code or acceptance updates, reinforcing that the current local gates are a workable sync boundary.
 
 - [x] Add focused regression checks for the `abc-io.ts` behaviors that matter most to `abc-player`.
   - ABC import compatibility improvements should be verified with representative inputs, especially lenient/real-world cases.
