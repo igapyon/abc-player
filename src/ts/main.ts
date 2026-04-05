@@ -1,12 +1,11 @@
 import "../../vendor/mikuscore/src/ts/main";
-import { exportMusicXmlDomToAbc } from "../../vendor/mikuscore/src/ts/abc-io";
-import { parseMusicXmlDocument } from "../../vendor/mikuscore/src/ts/musicxml-io";
 import { sampleXml1 } from "../../vendor/mikuscore/src/ts/sampleXml1";
 import { sampleXml2 } from "../../vendor/mikuscore/src/ts/sampleXml2";
 import { sampleXml3 } from "../../vendor/mikuscore/src/ts/sampleXml3";
 import { sampleXml4 } from "../../vendor/mikuscore/src/ts/sampleXml4";
 import { sampleXml6 } from "../../vendor/mikuscore/src/ts/sampleXml6";
 import { sampleXml7 } from "../../vendor/mikuscore/src/ts/sampleXml7";
+import { loadSampleAbcIntoDocument } from "./abc-player-integration";
 
 const q = <T extends Element>(selector: string): T | null => document.querySelector(selector) as T | null;
 const qa = <T extends Element>(selector: string): T[] => Array.from(document.querySelectorAll(selector)) as T[];
@@ -21,34 +20,6 @@ const hide = (selector: string): void => {
 const setText = (selector: string, value: string): void => {
   const el = q<HTMLElement>(selector);
   if (el) el.textContent = value;
-};
-
-const convertSampleXmlToAbc = (xml: string): string => {
-  const doc = parseMusicXmlDocument(xml);
-  if (!doc) throw new Error("Failed to parse built-in sample MusicXML.");
-  return exportMusicXmlDomToAbc(doc);
-};
-
-const loadSampleAbc = (xml: string): void => {
-  const inputEntrySource = q<HTMLInputElement>("#inputEntrySource");
-  const inputEntryFile = q<HTMLInputElement>("#inputEntryFile");
-  const sourceTypeAbc = q<HTMLInputElement>("#sourceTypeAbc");
-  const abcInput = q<HTMLTextAreaElement>("#abcInput");
-  const loadBtn = q<HTMLButtonElement>("#loadBtn");
-
-  if (inputEntrySource) inputEntrySource.checked = true;
-  if (inputEntryFile) inputEntryFile.checked = false;
-  if (sourceTypeAbc) sourceTypeAbc.checked = true;
-
-  inputEntrySource?.dispatchEvent(new Event("change", { bubbles: true }));
-  sourceTypeAbc?.dispatchEvent(new Event("change", { bubbles: true }));
-
-  if (abcInput) {
-    abcInput.value = convertSampleXmlToAbc(xml);
-    abcInput.dispatchEvent(new Event("input", { bubbles: true }));
-  }
-
-  loadBtn?.click();
 };
 
 const applyAbcPlayerRestrictions = (): void => {
@@ -132,7 +103,7 @@ const applyAbcPlayerRestrictions = (): void => {
       (event) => {
         event.preventDefault();
         event.stopImmediatePropagation();
-        loadSampleAbc(xml);
+        loadSampleAbcIntoDocument(document, xml);
       },
       true
     );
