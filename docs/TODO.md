@@ -2,6 +2,21 @@
 
 ## Upstream Sync
 
+- [ ] Pursue upstream profile / option support so `abc-player` can stay thin.
+  - Goal:
+    - prefer a `mikuscore`-side profile / option mechanism over accumulating downstream-only UI restriction logic
+  - Candidate request areas:
+    - app title / product wording injection points
+    - player-first default mode
+    - feature visibility for input methods
+    - feature visibility for edit/output surfaces
+    - sample-loading / onboarding hooks
+  - Local rule while this is unresolved:
+    - prefer larger coherent `mikuscore` sync when changes span shared `ABC <-> MusicXML` or UI/runtime contracts
+    - keep downstream overrides concentrated near entry-point / visibility logic
+  - Reference:
+    - [UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md)
+
 - [x] Define the acceptance rule for importing `mikuscore` `abc-io.ts` updates into `abc-player`.
   - Treat `vendor/mikuscore/src/ts/abc-io.ts` as a high-impact upstream dependency for `abc-player`, even when DOM and `main.ts` are unchanged.
   - Prefer taking `abc-io.ts` improvements from `mikuscore` after the behavior is backed by upstream unit tests, rather than re-implementing the fixes locally in `abc-player`.
@@ -16,6 +31,11 @@
   - Confirm no new `abc-io.ts` dependencies require synchronized changes outside the intended upstream update slice.
   - Confirm `abc-player` still behaves correctly for its player-first workflow: load as ABC, preview, playback, lightweight inherited edit/export.
   - Progress (2026-04-05): documented the checklist in [spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md).
+  - Progress (2026-04-06): confirmed the practical workflow is:
+    - update vendored `mikuscore` first
+    - run local gates
+    - adjust thin `abc-player` acceptance expectations where upstream moved semantics from `%@mks` into standard ABC surface syntax
+    - treat upstream changes as unnecessary unless a real downstream pain remains after that
 
 - [x] Add focused regression checks for the `abc-io.ts` behaviors that matter most to `abc-player`.
   - ABC import compatibility improvements should be verified with representative inputs, especially lenient/real-world cases.
@@ -55,6 +75,7 @@
 - [x] Define which ABC output deltas are acceptable for `abc-player` and which should fail acceptance.
   - Progress (2026-04-05): added [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md) as the first local acceptance policy.
   - Progress (2026-04-05): connected acceptance-test clusters to explicit policy buckets in [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md).
+  - Progress (2026-04-06): clarified that standard ABC spellings may replace redundant `%@mks` repeat metadata without counting as a regression, as long as roundtrip semantics remain intact.
   - Future refinement if needed:
     - tighten the boundary between "formatting-only acceptable delta" and "player-visible regression" if upstream change volume increases further
 

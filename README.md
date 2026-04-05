@@ -146,6 +146,7 @@ The precise target layout is documented in [docs/MIMIC_POLICY.md](/Users/igapyon
 - [docs/README.md](/Users/igapyon/Documents/git/abc-player/docs/README.md)
 - [docs/MIMIC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/MIMIC_POLICY.md)
 - [docs/PRODUCT_POSITIONING.md](/Users/igapyon/Documents/git/abc-player/docs/PRODUCT_POSITIONING.md)
+- [docs/UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md)
 
 ## License
 

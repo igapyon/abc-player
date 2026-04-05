@@ -25,6 +25,17 @@ Default rejection rule:
 
 - do not import blindly if the change breaks acceptance tests, expands dependencies unexpectedly, or changes player-visible ABC behavior without deliberate approval
 
+## Working Method
+
+Default working method for `abc-player`:
+
+1. update vendored `mikuscore` files in a coherent batch first
+2. run local gates and inspect what actually broke
+3. fix thin downstream expectations or UI glue in `abc-player` when the break is only local adaptation
+4. only then decide whether a real upstream change request is necessary
+
+This project should not start by speculating about new upstream switches when a straightforward vendor upgrade plus thin downstream adjustment is sufficient.
+
 ## Checklist
 
 - [ ] Confirm the upstream change is actually centered on `abc-io.ts` and not bundled with unrelated app-level changes.
@@ -37,13 +48,14 @@ Default rejection rule:
 - [ ] Run local `abc-player` gates:
   - `npm run typecheck`
   - `npm run test:all`
+- [ ] If tests fail, first check whether the failure is only an outdated downstream expectation in `abc-player` rather than a real regression in vendored behavior.
 - [ ] Check the `abc-player` acceptance policy buckets:
   - lenient import still works for representative real-world cases
   - player-facing `MusicXML -> ABC` output still produces usable headers/body
-  - `%@mks` roundtrip metadata still survives where `abc-player` depends on it
+  - roundtrip-sensitive repeat / measure / transpose semantics still survive where `abc-player` depends on them
   - recoverable parser fallback remains recoverable and not excessively noisy
 - [ ] If tests fail, classify the change before importing:
-  - upstream improvement that requires local acceptance updates
+  - upstream improvement that requires only local acceptance updates
   - real regression for `abc-player`
 
 ## Decision Notes
@@ -53,6 +65,7 @@ Good candidates for quick import:
 - parser leniency improvements
 - warning-quality improvements
 - local roundtrip fixes that keep acceptance behavior green
+- changes where standard ABC surface syntax replaces older `mikuscore`-specific `%@mks` expectations without losing player-relevant semantics
 
 Changes that deserve slower review:
 

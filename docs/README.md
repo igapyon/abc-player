@@ -20,6 +20,12 @@ At the current stage, documentation is centered on project direction rather than
   - tracks local follow-up items for upstream sync acceptance and regression hardening
 - [UPSTREAM_SYNC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_SYNC_POLICY.md)
   - defines how to keep future `mikuscore` sync easy
+- [UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md)
+  - defines the preferred long-term strategy of turning `abc-player` into a thin downstream profile of `mikuscore`
+- [UPSTREAM_PROFILE_REQUEST_DRAFT.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_REQUEST_DRAFT.md)
+  - draft text for requesting a general profile / option mechanism upstream in `mikuscore`
+- [UPSTREAM_SYNC_RETROSPECTIVE_2026-04-06.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_SYNC_RETROSPECTIVE_2026-04-06.md)
+  - records what actually happened during the 2026-04-06 vendored `mikuscore` upgrade and what was learned from it
 - [spec/SPEC.md](/Users/igapyon/Documents/git/abc-player/docs/spec/SPEC.md)
   - top-level initial specification
 - [spec/ARCHITECTURE.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ARCHITECTURE.md)

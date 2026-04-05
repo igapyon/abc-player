@@ -32,11 +32,13 @@ This is a deliberate choice, not accidental technical debt.
 ## What To Prefer
 
 - subtree-based upstream sync
+- larger coherent upstream sync over ad-hoc slice sync when the change spans shared contracts
 - thin wrappers
 - thin adapters
 - entry-point level customization
 - UI-level hiding or disabling
 - wording and product-scope restriction
+- upstream option / hook / profile points when they can replace downstream-only divergence
 
 ## What To Avoid
 
@@ -76,6 +78,12 @@ the default choice SHOULD be:
 
 - easier `mikuscore` incorporation later
 
+In practical update work, this usually means:
+
+- upgrade vendored `mikuscore` first
+- keep downstream fixes thin
+- only request upstream changes after a real repeated downstream pain point is confirmed
+
 ## Exception Rule
 
 Deviation from this policy should happen only when all of the following are true:
@@ -93,3 +101,9 @@ The intended model is:
 - externally: narrow `abc-player` functionality
 
 This policy exists to keep the project sustainable over time.
+
+Preferred long-term direction:
+
+- move from "downstream fork with local restriction logic" toward "thin downstream profile of `mikuscore`"
+
+See [UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md).
