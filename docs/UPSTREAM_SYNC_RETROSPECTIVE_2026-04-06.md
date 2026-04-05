@@ -207,6 +207,35 @@ Final practical outcome:
 - `npm run typecheck` passed
 - `npm run test:all` passed
 
+## Same-Day Follow-Up
+
+Later on 2026-04-06, `abc-player` imported a further upstream `mikuscore/devel` batch from `37066f8` to `c3f3fd9`.
+
+That later batch included additional `abc-io.ts` coverage expansion together with upstream docs/tests and generated artifacts, including:
+
+- `vendor/mikuscore/src/ts/abc-io.ts`
+- `vendor/mikuscore/tests/unit/abc-io.spec.ts`
+- `vendor/mikuscore/docs/spec/ABC_IO.md`
+- `vendor/mikuscore/docs/spec/abc-compat-parser-ebnf.md`
+- `vendor/mikuscore/docs/spec/ABC_STANDARD_COVERAGE.md`
+- `vendor/mikuscore/README.md`
+- `vendor/mikuscore/docs/FORMAT_COVERAGE.md`
+- `vendor/mikuscore/TODO.md`
+- `vendor/mikuscore/src/js/main.js`
+- `vendor/mikuscore/mikuscore.html`
+
+Observed result for that later batch:
+
+- `npm run typecheck` passed
+- `npm run test:all` passed
+- no `abc-player` source changes were required
+- no `abc-player` acceptance-test expectation changes were required
+
+This follow-up strengthens the practical conclusion from the earlier update:
+
+- the current `abc-player` sync boundary is good enough to absorb at least some further `abc-io.ts`-centered upstream growth unchanged
+- the first action should still be to import the vendor batch and run local gates before theorizing about additional downstream or upstream design work
+
 ## Related Documents
 
 - [docs/spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md)
