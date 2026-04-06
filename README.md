@@ -7,18 +7,18 @@ It is not starting from a blank architectural style.
 
 ## Status
 
-This repository is in specification and bootstrap phase.
+This repository is in active development.
 
 Current focus:
 
-- define project policy and structure
-- mimic `mikuscore` project shape
-- reuse vendored `mikuscore` assets where reasonable
-- keep the product centered on ABC playback while allowing compatible import routes
+- keep the app practical for real ABC preview and playback workflows
+- continue incorporating relevant `mikuscore` improvements through vendored sync
+- preserve the player-first product scope while keeping compatible import routes
+- refine acceptance boundaries and regression coverage around `ABC <-> MusicXML`
 
 ## Product Goal
 
-`Mikuku's abc-player` aims to provide a small, local, offline-capable ABC player with:
+`Mikuku's abc-player` provides a small, local, offline-capable ABC player with:
 
 - ABC text input
 - ABC file input
@@ -48,7 +48,7 @@ Its primary value is preview, playback, and quick verification, not strong score
 
 ## Development Direction
 
-The project SHOULD mimic these `mikuscore` characteristics:
+The project intentionally keeps these `mikuscore` characteristics:
 
 - single-file distribution artifact
 - offline runtime
@@ -127,7 +127,7 @@ English: Output screen for exporting the current work as ABC, MIDI, MusicXML, an
 
 ## Repository Layout
 
-Current / planned layout:
+Current layout:
 
 ```text
 abc-player/

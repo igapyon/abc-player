@@ -2,7 +2,7 @@
 
 This directory contains project documents for `abc-player`.
 
-At the current stage, documentation is centered on project direction rather than implementation detail.
+Documentation currently centers on product scope, upstream sync policy, and implementation boundaries that matter for ongoing development.
 
 ## Current Documents
 
@@ -27,9 +27,9 @@ At the current stage, documentation is centered on project direction rather than
 - [UPSTREAM_SYNC_RETROSPECTIVE_2026-04-06.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_SYNC_RETROSPECTIVE_2026-04-06.md)
   - records what actually happened during the 2026-04-06 vendored `mikuscore` upgrade and what was learned from it
 - [spec/SPEC.md](/Users/igapyon/Documents/git/abc-player/docs/spec/SPEC.md)
-  - top-level initial specification
+  - top-level product and implementation scope
 - [spec/ARCHITECTURE.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ARCHITECTURE.md)
-  - initial architecture boundary
+  - architecture boundary and reuse split
 - [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md)
   - defines acceptable vs non-acceptable ABC conversion deltas when syncing vendored `mikuscore` `abc-io.ts`
 - [spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md)
@@ -37,11 +37,11 @@ At the current stage, documentation is centered on project direction rather than
 - [spec/BUILD_PROCESS.md](/Users/igapyon/Documents/git/abc-player/docs/spec/BUILD_PROCESS.md)
   - single-file build model
 - [spec/UI_SPEC.md](/Users/igapyon/Documents/git/abc-player/docs/spec/UI_SPEC.md)
-  - initial UI scope and simplification rule
+  - current UI scope and simplification rule
 
 ## Planned Document Areas
 
-The following document categories are expected to be added as the project grows:
+The following document categories may still be added as the project grows:
 
 - product positioning
 - architecture
@@ -62,3 +62,4 @@ Documentation SHOULD be written before or alongside structure-heavy implementati
 - scope decisions
 
 For now, `MIMIC_POLICY.md` is the main starting point.
+For practical sync work, also start from `UPSTREAM_SYNC_POLICY.md` and `spec/ABC_SYNC_CHECKLIST.md`.
