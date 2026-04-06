@@ -6,6 +6,8 @@ Documentation currently centers on product scope, upstream sync policy, and impl
 
 ## Current Documents
 
+- [../CHANGELOG.md](/Users/igapyon/Documents/git/abc-player/CHANGELOG.md)
+  - records project-level change history and user-visible benefits of updates
 - [../THIRD_PARTY_NOTICES.md](/Users/igapyon/Documents/git/abc-player/THIRD_PARTY_NOTICES.md)
   - lists third-party software and reference materials used or referred to by the project
 - [../CONTRIBUTING.md](/Users/igapyon/Documents/git/abc-player/CONTRIBUTING.md)
