@@ -1,5 +1,15 @@
 # Changelog
 
+## 2026-04-07
+
+### Changed
+- Synced vendored `mikuscore` from upstream `c134a4b` to `96c52d5`.
+- Added upstream parser helper modules and tests to `vendor/mikuscore`, and regenerated `abc-player.html`.
+
+### Benefits
+- Adopted upstream parser-based `ABC` import handling in `abc-player` without downstream code changes.
+- Kept local `typecheck` and `test:all` green after the vendor update, which indicates the current sync boundary still absorbs upstream `ABC` parser growth cleanly.
+
 ## 2026-04-06
 
 ### Changed

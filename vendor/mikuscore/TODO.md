@@ -401,6 +401,70 @@
 - [ ] Document and test selection retention rules across re-render.
 - [ ] Add ABC roundtrip golden tests (`MusicXML -> ABC -> MusicXML`) for representative orchestral/piano scores.
 - [ ] Define acceptable roundtrip delta policy for ABC path (what may change vs must be preserved).
+- [ ] Refactor `ABC -> MusicXML` import from mixed regex/scanner logic into staged lexer/parser modules.
+  - Goal:
+    - stop growing `src/ts/abc-io.ts` as a mixed I/O + token scan + parse implementation
+    - move the body import path toward explicit lexical analysis and syntax analysis with small safe steps
+    - keep existing regression coverage as the acceptance gate for each migration slice
+  - Target module split:
+    - `src/ts/abc-lexer.ts`
+      - tokenize ABC body/input into explicit token kinds
+      - own low-level lexical rules such as accidental, pitch/rest, octave marks, length tokens, braces/brackets, bars, decorations, and inline-field boundaries
+    - `src/ts/abc-parser.ts`
+      - consume lexer tokens and build parser-level structures for import
+      - own grammar assembly for note, chord, grace group, tuplet, barline, decoration attachment, and inline field handling
+    - `src/ts/abc-io.ts`
+      - become a thinner orchestration / conversion layer
+      - keep MusicXML mapping and roundtrip policy logic, but stop owning raw token-by-token parsing
+  - Migration order:
+    - 1. create `src/ts/abc-lexer.ts`
+    - 2. create `src/ts/abc-parser.ts`
+    - 3. move only note/chord/grace parsing to the new parser first
+    - 4. run focused tests and fix regressions before expanding scope
+    - 5. migrate tuplet parsing next
+    - 6. migrate barline / repeat-ending parsing next
+    - 7. migrate decoration parsing/attachment next
+    - 8. thin `src/ts/abc-io.ts` after the new path has test parity
+  - Guardrails:
+    - do not attempt a one-shot rewrite of the full ABC import path
+    - preserve current supported subset/compat behavior unless tests or spec explicitly change it
+    - each migration slice should land with focused tests for both success and warning/degrade behavior
+    - prefer introducing parser-owned helper types over adding more parsing branches to `src/ts/abc-io.ts`
+  - Initial acceptance targets for phase 1:
+    - current failing/fragile note-length cases such as `3/` are covered by lexer/parser tests
+    - note/chord/grace parsing no longer depends on ad hoc body regex matching inside `src/ts/abc-io.ts`
+    - existing ABC unit tests stay green or regressions are explained and fixed in the same slice
+  - Progress:
+    - 2026-04-06:
+      - added `src/ts/abc-lexer.ts`
+      - added `src/ts/abc-parser.ts`
+      - moved `note/chord/grace` parsing to the new parser path
+      - moved `tuplet` parsing to the new parser path
+      - `src/ts/abc-io.ts` now delegates these areas to parser helpers instead of owning the raw token scan directly
+      - added focused regressions for:
+        - numerator-slash shorthand such as `3/` in note/chord/grace paths
+        - explicit tuplet ratio parsing such as `(5:4:5`
+    - 2026-04-07:
+      - moved body-side parser helpers such as `barline`, `repeat-ending`, `inline field`, `quoted string`, `decoration`, `broken rhythm`, `single-char shorthand`, `tie`, `slur-stop`, `bracket token`, `body token`, `playable event`, and `body entry` into `src/ts/abc-parser.ts`
+      - `src/ts/abc-io.ts` body import loop now runs primarily as parser-driven dispatch plus state application / MusicXML mapping
+      - added and expanded focused parser unit coverage in `tests/unit/abc-parser.spec.ts`
+      - parser / spec structure cleanup is substantially complete; remaining work is mainly test expansion, docs sync, and any future bounded helper extraction driven by real regressions
+  - Resume note:
+    - current stop point:
+      - the main staged lexer/parser migration is substantially landed
+      - `src/ts/abc-parser.ts` now owns most body-side parsing helpers and dispatch entrypoints
+      - `src/ts/abc-io.ts` is now mostly orchestration / state-application code for the body path
+    - next restart target:
+      - expand regression coverage only where real input or unsupported-boundary audits reveal gaps
+    - recommended restart order:
+      - 1. treat `tests/unit/abc-parser.spec.ts` and unsupported-input regression cases as the primary restart surface
+      - 2. update spec/docs only when the supported subset or parser behavior meaningfully changes
+      - 3. avoid reopening broad parser restructuring unless new failures show a concrete need
+    - files to open first:
+      - `tests/unit/abc-parser.spec.ts`
+      - `src/ts/abc-parser.ts`
+      - `src/ts/abc-io.ts`
+      - `tests/unit/abc-io.spec.ts`
 - [ ] Follow up ABC unsupported-input boundary audit after the 2026-04-06 body-continuation incident.
   - Trigger / what happened:
     - real-world ABC input used body lines ending with `\` and then continued with standalone body-side field changes such as `K:...`
