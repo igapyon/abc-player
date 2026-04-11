@@ -1,0 +1,23 @@
+{
+  "name": "miku-abc-player",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run typecheck && npm run test:all && npm run build:dist",
+    "build:all": "npm run build",
+    "build:dist": "node scripts/build.mjs",
+    "check:all": "npm run build",
+    "clean": "rm -rf .miku-abc-player-build miku-abc-player.html src/js/main.js",
+    "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run tests/unit",
+    "test:all": "vitest run",
+    "test:unit:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "jsdom": "^26.1.0",
+    "typescript": "5.9.3",
+    "vitest": "^3.2.0"
+  }
+}

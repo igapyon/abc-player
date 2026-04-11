@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>miku-abc-player</title>
+  <style>
+    :root {
+      --bg: #f7f5fb;
+      --bg-accent: #eef6f4;
+      --surface: #fffdfd;
+      --surface-2: #f4faf8;
+      --text: #1d1b20;
+      --heading: #1f3141;
+      --muted: #4f5560;
+      --primary: #0f766e;
+      --primary-strong: #0b5f58;
+      --on-primary: #ffffff;
+      --secondary-bg: #e7f1ef;
+      --secondary-text: #1d4f4a;
+      --outline: #dce7e4;
+      --outline-2: #c7d9d4;
+      --code-bg: #edf5f3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "BIZ UDPGothic", "Noto Sans JP", "Hiragino Sans", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 28%),
+        linear-gradient(180deg, var(--bg-accent) 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: min(760px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--outline);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow:
+        0 18px 44px rgba(31, 49, 65, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--heading);
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      line-height: 1.25;
+      color: var(--heading);
+    }
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+    ul, ol {
+      margin: 0 0 16px;
+      padding-left: 1.25rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 0.34rem 0.72rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.14);
+      color: var(--heading);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .lead {
+      font-size: 1.02rem;
+      color: #46515a;
+    }
+    .link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .link-btn,
+    .link-btn-secondary {
+      display: inline-block;
+      text-decoration: none;
+      padding: 0.82rem 1.35rem;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+    .link-btn {
+      background: var(--primary);
+      color: var(--on-primary);
+      box-shadow: 0 10px 24px rgba(15, 118, 110, 0.24);
+    }
+    .link-btn-secondary {
+      background: var(--secondary-bg);
+      color: var(--secondary-text);
+      border: 1px solid var(--outline-2);
+    }
+    .link-btn:hover,
+    .link-btn-secondary:hover {
+      transform: translateY(-1px);
+    }
+    .link-btn:hover {
+      background: var(--primary-strong);
+      box-shadow: 0 12px 26px rgba(15, 118, 110, 0.26);
+    }
+    .link-btn-secondary:hover {
+      background: #dceee9;
+      border-color: #b7d0ca;
+    }
+    .divider {
+      border: 0;
+      border-top: 1px solid var(--outline);
+      margin: 24px 0;
+    }
+    .sub {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    @media (min-width: 720px) {
+      .gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    .shot-card {
+      margin: 0;
+      padding: 14px;
+      background: var(--surface-2);
+      border: 1px solid var(--outline);
+      border-radius: 20px;
+      box-shadow: 0 10px 28px rgba(31, 49, 65, 0.08);
+    }
+    .shot-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--outline-2);
+      background: #f4faf8;
+    }
+    .shot-card figcaption {
+      margin-top: 10px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: var(--code-bg);
+      color: var(--secondary-text);
+      padding: 0.12rem 0.38rem;
+      border-radius: 8px;
+      font-size: 0.92em;
+    }
+    .lang-block:last-child p:last-child {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="eyebrow">Local Browser Tool</div>
+    <h1>miku-abc-player</h1>
+    <p class="sub">Updated: 2026-04-11</p>
+
+    <section class="lang-block" aria-label="English What is this">
+      <h2>What is this?</h2>
+      <p class="lead">
+        <code>miku-abc-player</code> is a single-file web app that can load multiple supported formats, open them as ABC, and let you preview, play back, and make lightweight adjustments locally in the browser.
+      </p>
+      <ul>
+        <li>Runs locally in the browser without server communication.</li>
+        <li>Focused on opening supported formats as ABC for playback, preview, and lightweight conversion.</li>
+        <li>Derived from <code>mikuscore</code> and keeps some lightweight inherited edit and output capability.</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="English Features">
+      <h2>Features</h2>
+      <ul>
+        <li>Load ABC from file input or source text.</li>
+        <li>Import supported non-ABC files and open them as ABC after MusicXML normalization.</li>
+        <li>Preview score rendering in the browser.</li>
+        <li>Play back the loaded score locally.</li>
+        <li>Use lightweight inherited editing and output functions when needed.</li>
+        <li>Use the app as a single self-contained HTML file.</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="English Use Cases">
+      <h2>Use Cases</h2>
+      <ul>
+        <li>Paste ABC text and hear it quickly.</li>
+        <li>Import an ABC file and verify the result.</li>
+        <li>Import a supported non-ABC file and inspect it as generated ABC.</li>
+        <li>Preview score rendering before sharing or exporting.</li>
+        <li>Make small confirmation-oriented adjustments before replaying.</li>
+        <li>Export loaded ABC into MIDI, MusicXML, and other score-related formats when conversion is needed.</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="English How to use">
+      <h2>How to use</h2>
+      <ol>
+        <li>Open <code>miku-abc-player.html</code> in a web browser.</li>
+        <li>Load ABC from a file, paste ABC source text, or import another supported format.</li>
+        <li>Preview the score and use playback.</li>
+        <li>Use lightweight edit or output functions when needed.</li>
+      </ol>
+      <div class="link-row">
+        <a class="link-btn" href="./miku-abc-player.html?v=202604042300">Open miku-abc-player</a>
+        <a class="link-btn-secondary" href="https://github.com/igapyon/miku-abc-player" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="English How it works">
+      <h2>How it works</h2>
+      <ul>
+        <li>Load ABC directly or import another supported format in the browser.</li>
+        <li>Normalize non-ABC input through MusicXML via reused <code>mikuscore</code> assets.</li>
+        <li>Open the loaded content as ABC.</li>
+        <li>Render the score for preview.</li>
+        <li>Play back the score locally in the browser.</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section aria-label="Screenshots">
+      <h2>Screenshots</h2>
+      <div class="gallery">
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen01.png" alt="miku-abc-player input screen" loading="lazy" />
+          <figcaption>
+            English: Input screen for providing ABC directly or importing another supported format that will be normalized through MusicXML and opened as ABC.<br />
+            日本語: ABC を直接入力するか、他の対応形式を読み込んで MusicXML 正規化経由で ABC として開くための Input 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen02.png" alt="miku-abc-player score screen" loading="lazy" />
+          <figcaption>
+            English: Score screen showing rendered notation for visual confirmation together with playback controls.<br />
+            日本語: 描画された譜面を見て内容を確認し、そのまま簡易再生できる Score 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen03.png" alt="miku-abc-player edit screen" loading="lazy" />
+          <figcaption>
+            English: Edit screen for lightweight note and measure adjustment inherited from mikuscore.<br />
+            日本語: mikuscore 由来の軽量で簡易な編集機能で、音符などの調整を行う Edit 画面です。
+          </figcaption>
+        </figure>
+        <figure class="shot-card">
+          <img src="./docs/screenshots/screen04.png" alt="miku-abc-player output screen" loading="lazy" />
+          <figcaption>
+            English: Output screen for exporting the current work as ABC, MIDI, MusicXML, and other score-related formats.<br />
+            日本語: 現在の内容を ABC、MIDI、MusicXML などの譜面関連形式として書き出すための Output 画面です。
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="Japanese What is this">
+      <h2>What is this?</h2>
+      <p class="lead">
+        <code>miku-abc-player</code> は、複数の対応形式を読み込んで ABC として開き、譜面プレビュー、再生、軽微修正をブラウザ内で行える Single-file Web App です。
+      </p>
+      <ul>
+        <li>ブラウザ内でローカルに動作し、サーバ通信を行いません。</li>
+        <li>対応形式を ABC として開き、再生、プレビュー、簡易変換に使うことを主目的にしています。</li>
+        <li><code>mikuscore</code> をベースにしつつ、軽量な編集・出力機能を一部引き継ぎます。</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="Japanese Features">
+      <h2>Features</h2>
+      <ul>
+        <li>ABC ファイル入力と ABC テキスト入力に対応します。</li>
+        <li>ABC 以外の対応形式も MusicXML 正規化を経て ABC として開けます。</li>
+        <li>ブラウザ内で譜面プレビューを表示します。</li>
+        <li>読み込んだ譜面をローカル再生できます。</li>
+        <li>必要に応じて、引き継いだ軽量な編集・出力機能を利用できます。</li>
+        <li>単一 HTML ファイルとして利用できます。</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="Japanese Use Cases">
+      <h2>Use Cases</h2>
+      <ul>
+        <li>ABC テキストを貼り付けてすぐに音を確認したい。</li>
+        <li>ABC ファイルを読み込んで内容を確認したい。</li>
+        <li>ABC 以外の対応形式を読み込み、生成された ABC として確認したい。</li>
+        <li>共有や書き出しの前に譜面表示を確認したい。</li>
+        <li>再生前に小さな確認用修正を行いたい。</li>
+        <li>必要に応じて、読み込んだ ABC を MIDI や MusicXML などの譜面関連形式へ書き出したい。</li>
+      </ul>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="Japanese How to use">
+      <h2>How to use</h2>
+      <ol>
+        <li>Webブラウザで <code>miku-abc-player.html</code> を開きます。</li>
+        <li>ABC ファイルを読み込むか、ABC テキストを貼り付けるか、他の対応形式を取り込みます。</li>
+        <li>譜面をプレビューし、再生します。</li>
+        <li>必要に応じて軽量な編集や出力機能を使います。</li>
+      </ol>
+      <div class="link-row">
+        <a class="link-btn" href="./miku-abc-player.html?v=202604042300">miku-abc-player を開く</a>
+        <a class="link-btn-secondary" href="https://github.com/igapyon/miku-abc-player" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <section class="lang-block" aria-label="Japanese How it works">
+      <h2>How it works</h2>
+      <ul>
+        <li>ブラウザ内で ABC を直接読み込むか、他の対応形式を取り込みます。</li>
+        <li>ABC 以外の入力は、再利用している <code>mikuscore</code> アセットを通じて MusicXML に正規化します。</li>
+        <li>正規化後の内容を ABC として開きます。</li>
+        <li>譜面を描画してプレビューします。</li>
+        <li>ブラウザ内でローカル再生します。</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const selector = 'a[href^="./miku-abc-player.html"]';
+      const buildVersionStamp = () => {
+        const d = new Date();
+        return (
+          d.getFullYear().toString() +
+          String(d.getMonth() + 1).padStart(2, "0") +
+          String(d.getDate()).padStart(2, "0") +
+          String(d.getHours()).padStart(2, "0") +
+          String(d.getMinutes()).padStart(2, "0")
+        );
+      };
+      const stampAndGo = (anchor) => {
+        const u = new URL(anchor.getAttribute("href"), location.href);
+        u.searchParams.set("v", buildVersionStamp());
+        anchor.setAttribute("href", u.pathname + u.search);
+      };
+      document.addEventListener("click", (ev) => {
+        const a = ev.target.closest(selector);
+        if (!a) return;
+        stampAndGo(a);
+      }, true);
+      document.addEventListener("auxclick", (ev) => {
+        if (ev.button !== 1) return;
+        const a = ev.target.closest(selector);
+        if (!a) return;
+        stampAndGo(a);
+      }, true);
+    })();
+  </script>
+</body>
+</html>
