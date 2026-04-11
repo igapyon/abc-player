@@ -1,12 +1,12 @@
 # Third-Party Notices
 
-This document lists third-party software and reference materials used or referred to by `abc-player`.
+This document lists third-party software and reference materials used or referred to by `miku-abc-player`.
 
 ## Third-party software
 
 ### mikuscore
 
-- Usage: Vendored upstream-derived codebase reused by `abc-player`
+- Usage: Vendored upstream-derived codebase reused by `miku-abc-player`
 - License: Apache License 2.0
 - Source: https://github.com/igapyon/mikuscore
 
@@ -34,13 +34,13 @@ This document lists third-party software and reference materials used or referre
 
 # 第三者告知
 
-この文書は、`abc-player` が利用または参照している第三者ソフトウェアおよび参考資料を記載したものです。
+この文書は、`miku-abc-player` が利用または参照している第三者ソフトウェアおよび参考資料を記載したものです。
 
 ## 第三者ソフトウェア
 
 ### mikuscore
 
-- 用途: `abc-player` が再利用する upstream 由来の同梱コードベース
+- 用途: `miku-abc-player` が再利用する upstream 由来の同梱コードベース
 - ライセンス: Apache License 2.0
 - Source: https://github.com/igapyon/mikuscore
 

@@ -23,9 +23,9 @@ const setText = (selector: string, value: string): void => {
 };
 
 const applyAbcPlayerRestrictions = (): void => {
-  document.title = "Mikuku's abc-player";
+  document.title = "miku-abc-player";
 
-  setText(".ms-hero-title > span:nth-of-type(2)", "Mikuku's abc-player");
+  setText(".ms-hero-title > span:nth-of-type(2)", "miku-abc-player");
 
   const inputHelp = q<HTMLElement>('lht-help-tooltip[label="Input help"] .ms-section-help-tooltip');
   if (inputHelp) {

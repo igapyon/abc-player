@@ -4,7 +4,7 @@
 
 ### Changed
 - Synced vendored `mikuscore` from upstream `c134a4b` to `96c52d5`.
-- Added upstream parser helper modules and tests to `vendor/mikuscore`, and regenerated `abc-player.html`.
+- Added upstream parser helper modules and tests to `vendor/mikuscore`, and regenerated `miku-abc-player.html`.
 
 ### Benefits
 - Adopted upstream parser-based `ABC` import handling in `abc-player` without downstream code changes.
@@ -14,7 +14,7 @@
 
 ### Changed
 - Synced vendored `mikuscore` from upstream `c3f3fd9` to `c134a4b`.
-- Regenerated `abc-player.html` to reflect the updated vendored parser/runtime assets.
+- Regenerated `miku-abc-player.html` to reflect the updated vendored parser/runtime assets.
 
 ### Benefits
 - Improved `ABC -> MusicXML` import robustness in `abc-player` through upstream parser hardening.

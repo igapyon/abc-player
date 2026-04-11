@@ -1,5 +1,5 @@
 {
-  "name": "abc-player",
+  "name": "miku-abc-player",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -8,7 +8,7 @@
     "build:all": "npm run build",
     "build:dist": "node scripts/build.mjs",
     "check:all": "npm run build",
-    "clean": "rm -rf .abc-player-build abc-player.html src/js/main.js",
+    "clean": "rm -rf .miku-abc-player-build miku-abc-player.html src/js/main.js",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run tests/unit",
     "test:all": "vitest run",

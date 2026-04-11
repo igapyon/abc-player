@@ -121,8 +121,8 @@ If inherited `mikuscore` edit or output features remain available:
 
 The distribution target is a single self-contained HTML file:
 
-- source template: `abc-player-src.html`
-- generated artifact: `abc-player.html`
+- source template: `miku-abc-player-src.html`
+- generated artifact: `miku-abc-player.html`
 
 The generated artifact MUST run offline.
 

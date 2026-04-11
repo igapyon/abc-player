@@ -58,8 +58,8 @@ The upstream reference is `vendor/mikuscore/`.
 
 Recommended artifact naming:
 
-- source template: `abc-player-src.html`
-- distribution artifact: `abc-player.html`
+- source template: `miku-abc-player-src.html`
+- distribution artifact: `miku-abc-player.html`
 
 This mirrors:
 
@@ -260,9 +260,9 @@ However:
 ## Recommended Project Layout
 
 ```text
-abc-player/
-  abc-player-src.html
-  abc-player.html
+miku-abc-player/
+  miku-abc-player-src.html
+  miku-abc-player.html
   package.json
   tsconfig.json
   vitest.config.ts
@@ -326,8 +326,8 @@ and not as a full editor.
 
 Based on this policy, the next setup steps SHOULD be:
 
-1. create `abc-player-src.html`
-2. create `abc-player.html` as generated artifact target
+1. create `miku-abc-player-src.html`
+2. create `miku-abc-player.html` as generated artifact target
 3. create `tsconfig.json` aligned with `mikuscore`
 4. create `vitest.config.ts` aligned with `mikuscore`
 5. create `scripts/build.mjs` modeled after `vendor/mikuscore/scripts/build.mjs`

@@ -57,8 +57,8 @@ This is allowed as long as:
 
 ## Runtime and Build Model
 
-- runtime distribution: `abc-player.html`
-- editable template: `abc-player-src.html`
+- runtime distribution: `miku-abc-player.html`
+- editable template: `miku-abc-player-src.html`
 - source layout: split TypeScript under `src/`
 - build: compile and inline local CSS/JS into one HTML file
 - runtime dependency rule: no external network dependency

@@ -106,4 +106,4 @@ Preferred long-term direction:
 
 - move from "downstream fork with local restriction logic" toward "thin downstream profile of `mikuscore`"
 
-See [UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md).
+See [UPSTREAM_PROFILE_STRATEGY.md](UPSTREAM_PROFILE_STRATEGY.md).
