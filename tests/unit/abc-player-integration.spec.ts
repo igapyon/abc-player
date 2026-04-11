@@ -1,8 +1,66 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
-import { loadSampleAbcIntoDocument } from "../../src/ts/abc-player-integration";
+import {
+  getAbcParamFromUrl,
+  loadAbcSourceIntoDocument,
+  loadSampleAbcIntoDocument,
+} from "../../src/ts/abc-player-integration";
 
 describe("abc-player integration helpers", () => {
+  it("reads abc from the query string with URL decoding", () => {
+    const abc = getAbcParamFromUrl("https://example.invalid/?abc=X%3A1%0AT%3ASample%0AK%3AC");
+    expect(abc).toBe("X:1\nT:Sample\nK:C");
+  });
+
+  it("returns null when the abc query parameter is missing", () => {
+    expect(getAbcParamFromUrl("https://example.invalid/?foo=bar")).toBeNull();
+  });
+
+  it("loads ABC source from the DOM flow used by miku-abc-player", () => {
+    document.body.innerHTML = `
+      <label><input id="inputEntryFile" type="radio" name="inputEntry" checked></label>
+      <label><input id="inputEntrySource" type="radio" name="inputEntry"></label>
+      <label><input id="sourceTypeAbc" type="radio" name="sourceType"></label>
+      <textarea id="abcInput"></textarea>
+      <button id="loadBtn" type="button">Load</button>
+    `;
+
+    const inputEntrySource = document.querySelector<HTMLInputElement>("#inputEntrySource");
+    const inputEntryFile = document.querySelector<HTMLInputElement>("#inputEntryFile");
+    const sourceTypeAbc = document.querySelector<HTMLInputElement>("#sourceTypeAbc");
+    const abcInput = document.querySelector<HTMLTextAreaElement>("#abcInput");
+    const loadBtn = document.querySelector<HTMLButtonElement>("#loadBtn");
+
+    expect(inputEntrySource).not.toBeNull();
+    expect(inputEntryFile).not.toBeNull();
+    expect(sourceTypeAbc).not.toBeNull();
+    expect(abcInput).not.toBeNull();
+    expect(loadBtn).not.toBeNull();
+    if (!inputEntrySource || !inputEntryFile || !sourceTypeAbc || !abcInput || !loadBtn) return;
+
+    const sourceChange = vi.fn();
+    const abcChange = vi.fn();
+    const abcInputEvent = vi.fn();
+    const loadClick = vi.fn();
+
+    inputEntrySource.addEventListener("change", sourceChange);
+    sourceTypeAbc.addEventListener("change", abcChange);
+    abcInput.addEventListener("input", abcInputEvent);
+    loadBtn.addEventListener("click", loadClick);
+
+    loadAbcSourceIntoDocument(document, "X:1\nT:Sample\nM:4/4\nL:1/8\nK:C\nC D E F |");
+
+    expect(inputEntrySource.checked).toBe(true);
+    expect(inputEntryFile.checked).toBe(false);
+    expect(sourceTypeAbc.checked).toBe(true);
+    expect(abcInput.value).toContain("X:1");
+    expect(abcInput.value).toContain("K:C");
+    expect(sourceChange).toHaveBeenCalledTimes(1);
+    expect(abcChange).toHaveBeenCalledTimes(1);
+    expect(abcInputEvent).toHaveBeenCalledTimes(1);
+    expect(loadClick).toHaveBeenCalledTimes(1);
+  });
+
   it("loads sample ABC into the DOM flow used by abc-player", () => {
     document.body.innerHTML = `
       <label><input id="inputEntryFile" type="radio" name="inputEntry" checked></label>

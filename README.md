@@ -107,6 +107,16 @@ Non-goal:
 - プレビュー用に譜面を描画する
 - ブラウザ内で譜面をローカル再生する
 
+## URL Query Input
+
+- The app can accept ABC text from the `?abc=` query parameter.
+- Pass URL-encoded ABC text and the app loads it into `Source input` as `ABC`.
+- This flow reads only the query string already present in the URL. It does not fetch an external URL.
+
+- アプリは `?abc=` クエリパラメータから ABC テキストを受け取れます。
+- URL エンコードした ABC テキストを渡すと、`Source input` の `ABC` として読み込みます。
+- この動作は URL に含まれているクエリ文字列を読むだけで、外部 URL の取得は行いません。
+
 ## Screenshots
 
 ![Input screen](docs/screenshots/screen01.png)

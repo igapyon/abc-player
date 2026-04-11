@@ -35,6 +35,7 @@ Supported initial entry routes SHOULD be:
 
 - ABC file import
 - ABC text input
+- URL query input through `?abc=` carrying URL-encoded ABC text
 - supported non-ABC file import with user-facing ABC presentation after MusicXML normalization
 
 ## 2.2 Removed Direct Input Surface
@@ -56,6 +57,12 @@ For non-ABC imports, the expected flow is:
 - source file
 - normalize to MusicXML
 - generate user-facing ABC
+
+For URL query input, the expected flow is:
+
+- read `?abc=` from the current URL
+- URL-decode the text
+- treat the result as user-facing ABC source input
 
 ---
 
