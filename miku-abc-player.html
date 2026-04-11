@@ -2041,8 +2041,8 @@ lht-help-tooltip:not([data-initialized="true"]) * {
 
           <div class="ms-radio-group-wrap">
             <div class="ms-radio-group" role="radiogroup" aria-label="Input entry mode">
-              <label class="md-radio"><input id="inputEntryFile" type="radio" name="inputEntry" value="file" checked /> File input</label>
-              <label class="md-radio"><input id="inputEntrySource" type="radio" name="inputEntry" value="source" /> Source input</label>
+              <label class="md-radio"><input id="inputEntryFile" type="radio" name="inputEntry" value="file" /> File input</label>
+              <label class="md-radio"><input id="inputEntrySource" type="radio" name="inputEntry" value="source" checked /> Source input</label>
               <label class="md-radio"><input id="inputEntryNew" type="radio" name="inputEntry" value="new" /> New Score</label>
             </div>
           </div>
@@ -10410,8 +10410,11 @@ const applyAbcPlayerRestrictions = () => {
     hide("#zipEntrySelectBlock");
     hide("#copyAiJsonPromptBtn");
     hide("#downloadMeasureJsonBtn");
-    if (inputEntryFile && !(inputEntrySource === null || inputEntrySource === void 0 ? void 0 : inputEntrySource.checked)) {
-        inputEntryFile.checked = true;
+    if (inputEntrySource) {
+        inputEntrySource.checked = true;
+    }
+    if (inputEntryFile) {
+        inputEntryFile.checked = false;
     }
     const refresh = () => {
         if (sourceTypeAbc) {
@@ -10422,6 +10425,10 @@ const applyAbcPlayerRestrictions = () => {
     inputEntryFile === null || inputEntryFile === void 0 ? void 0 : inputEntryFile.addEventListener("change", refresh);
     inputEntrySource === null || inputEntrySource === void 0 ? void 0 : inputEntrySource.addEventListener("change", refresh);
     refresh();
+    const initialAbc = (0, abc_player_integration_1.getAbcParamFromUrl)(window.location.href);
+    if (initialAbc) {
+        (0, abc_player_integration_1.loadAbcSourceIntoDocument)(document, initialAbc);
+    }
     const sampleBindings = [
         ["#loadSample1Btn", sampleXml1_1.sampleXml1],
         ["#loadSample2Btn", sampleXml2_1.sampleXml2],
@@ -10454,7 +10461,7 @@ else {
   "src/ts/abc-player-integration.js": function (require, module, exports) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadSampleAbcIntoDocument = exports.convertSampleXmlToAbc = void 0;
+exports.loadSampleAbcIntoDocument = exports.loadAbcSourceIntoDocument = exports.getAbcParamFromUrl = exports.convertSampleXmlToAbc = void 0;
 const abc_io_1 = require("../../vendor/mikuscore/src/ts/abc-io");
 const musicxml_io_1 = require("../../vendor/mikuscore/src/ts/musicxml-io");
 const q = (root, selector) => {
@@ -10467,7 +10474,13 @@ const convertSampleXmlToAbc = (xml) => {
     return (0, abc_io_1.exportMusicXmlDomToAbc)(doc);
 };
 exports.convertSampleXmlToAbc = convertSampleXmlToAbc;
-const loadSampleAbcIntoDocument = (root, xml, toAbc = exports.convertSampleXmlToAbc) => {
+const getAbcParamFromUrl = (href) => {
+    const url = new URL(href, "https://example.invalid");
+    const abc = url.searchParams.get("abc");
+    return abc && abc.length > 0 ? abc : null;
+};
+exports.getAbcParamFromUrl = getAbcParamFromUrl;
+const loadAbcSourceIntoDocument = (root, abcSource) => {
     const inputEntrySource = q(root, "#inputEntrySource");
     const inputEntryFile = q(root, "#inputEntryFile");
     const sourceTypeAbc = q(root, "#sourceTypeAbc");
@@ -10482,10 +10495,14 @@ const loadSampleAbcIntoDocument = (root, xml, toAbc = exports.convertSampleXmlTo
     inputEntrySource === null || inputEntrySource === void 0 ? void 0 : inputEntrySource.dispatchEvent(new Event("change", { bubbles: true }));
     sourceTypeAbc === null || sourceTypeAbc === void 0 ? void 0 : sourceTypeAbc.dispatchEvent(new Event("change", { bubbles: true }));
     if (abcInput) {
-        abcInput.value = toAbc(xml);
+        abcInput.value = abcSource;
         abcInput.dispatchEvent(new Event("input", { bubbles: true }));
     }
     loadBtn === null || loadBtn === void 0 ? void 0 : loadBtn.click();
+};
+exports.loadAbcSourceIntoDocument = loadAbcSourceIntoDocument;
+const loadSampleAbcIntoDocument = (root, xml, toAbc = exports.convertSampleXmlToAbc) => {
+    (0, exports.loadAbcSourceIntoDocument)(root, toAbc(xml));
 };
 exports.loadSampleAbcIntoDocument = loadSampleAbcIntoDocument;
 

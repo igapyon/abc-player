@@ -5,7 +5,7 @@ import { sampleXml3 } from "../../vendor/mikuscore/src/ts/sampleXml3";
 import { sampleXml4 } from "../../vendor/mikuscore/src/ts/sampleXml4";
 import { sampleXml6 } from "../../vendor/mikuscore/src/ts/sampleXml6";
 import { sampleXml7 } from "../../vendor/mikuscore/src/ts/sampleXml7";
-import { loadSampleAbcIntoDocument } from "./abc-player-integration";
+import { getAbcParamFromUrl, loadAbcSourceIntoDocument, loadSampleAbcIntoDocument } from "./abc-player-integration";
 
 const q = <T extends Element>(selector: string): T | null => document.querySelector(selector) as T | null;
 const qa = <T extends Element>(selector: string): T[] => Array.from(document.querySelectorAll(selector)) as T[];
@@ -69,8 +69,11 @@ const applyAbcPlayerRestrictions = (): void => {
   hide("#copyAiJsonPromptBtn");
   hide("#downloadMeasureJsonBtn");
 
-  if (inputEntryFile && !inputEntrySource?.checked) {
-    inputEntryFile.checked = true;
+  if (inputEntrySource) {
+    inputEntrySource.checked = true;
+  }
+  if (inputEntryFile) {
+    inputEntryFile.checked = false;
   }
 
   const refresh = (): void => {
@@ -83,6 +86,11 @@ const applyAbcPlayerRestrictions = (): void => {
   inputEntryFile?.addEventListener("change", refresh);
   inputEntrySource?.addEventListener("change", refresh);
   refresh();
+
+  const initialAbc = getAbcParamFromUrl(window.location.href);
+  if (initialAbc) {
+    loadAbcSourceIntoDocument(document, initialAbc);
+  }
 
   const sampleBindings: Array<[string, string]> = [
     ["#loadSample1Btn", sampleXml1],

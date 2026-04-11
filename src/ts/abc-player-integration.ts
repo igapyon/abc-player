@@ -11,11 +11,13 @@ export const convertSampleXmlToAbc = (xml: string): string => {
   return exportMusicXmlDomToAbc(doc);
 };
 
-export const loadSampleAbcIntoDocument = (
-  root: Document | HTMLElement,
-  xml: string,
-  toAbc: (sourceXml: string) => string = convertSampleXmlToAbc
-): void => {
+export const getAbcParamFromUrl = (href: string): string | null => {
+  const url = new URL(href, "https://example.invalid");
+  const abc = url.searchParams.get("abc");
+  return abc && abc.length > 0 ? abc : null;
+};
+
+export const loadAbcSourceIntoDocument = (root: Document | HTMLElement, abcSource: string): void => {
   const inputEntrySource = q<HTMLInputElement>(root, "#inputEntrySource");
   const inputEntryFile = q<HTMLInputElement>(root, "#inputEntryFile");
   const sourceTypeAbc = q<HTMLInputElement>(root, "#sourceTypeAbc");
@@ -30,9 +32,17 @@ export const loadSampleAbcIntoDocument = (
   sourceTypeAbc?.dispatchEvent(new Event("change", { bubbles: true }));
 
   if (abcInput) {
-    abcInput.value = toAbc(xml);
+    abcInput.value = abcSource;
     abcInput.dispatchEvent(new Event("input", { bubbles: true }));
   }
 
   loadBtn?.click();
+};
+
+export const loadSampleAbcIntoDocument = (
+  root: Document | HTMLElement,
+  xml: string,
+  toAbc: (sourceXml: string) => string = convertSampleXmlToAbc
+): void => {
+  loadAbcSourceIntoDocument(root, toAbc(xml));
 };

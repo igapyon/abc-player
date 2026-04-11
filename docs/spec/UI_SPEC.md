@@ -27,6 +27,7 @@ The `Input` panel SHOULD remain ABC-centered while allowing broader file import.
 
 - ABC file input
 - ABC source text input
+- ABC source text passed through the `?abc=` query parameter
 - supported non-ABC file input that is normalized through MusicXML and then opened as ABC
 
 ### Removed direct source modes from UI
@@ -43,6 +44,7 @@ These direct source-specific text entry surfaces MAY stay hidden even when file 
 ### Notes
 
 - ABC text input SHOULD be preserved or created explicitly if missing in the derived UI
+- URL-provided `?abc=` text SHOULD be treated like the `ABC` source-input path after URL decoding
 - imported non-ABC files SHOULD appear to the user as ABC after MusicXML normalization
 - if a `New Score` surface remains temporarily, it SHOULD be treated as optional and subject to later review
 
