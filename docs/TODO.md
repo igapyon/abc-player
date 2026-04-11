@@ -15,13 +15,13 @@
     - prefer larger coherent `mikuscore` sync when changes span shared `ABC <-> MusicXML` or UI/runtime contracts
     - keep downstream overrides concentrated near entry-point / visibility logic
   - Reference:
-    - [UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md)
+    - [UPSTREAM_PROFILE_STRATEGY.md](UPSTREAM_PROFILE_STRATEGY.md)
 
 - [x] Define the acceptance rule for importing `mikuscore` `abc-io.ts` updates into `abc-player`.
   - Treat `vendor/mikuscore/src/ts/abc-io.ts` as a high-impact upstream dependency for `abc-player`, even when DOM and `main.ts` are unchanged.
   - Prefer taking `abc-io.ts` improvements from `mikuscore` after the behavior is backed by upstream unit tests, rather than re-implementing the fixes locally in `abc-player`.
   - Separate review of `abc-io.ts` updates from broader `mikuscore` app updates such as `src/ts/main.ts`, HTML templates, or build scripts.
-  - Progress (2026-04-05): documented the rule in [spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md) and aligned it with [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md).
+  - Progress (2026-04-05): documented the rule in [spec/ABC_SYNC_CHECKLIST.md](spec/ABC_SYNC_CHECKLIST.md) and aligned it with [spec/ABC_ACCEPTANCE_POLICY.md](spec/ABC_ACCEPTANCE_POLICY.md).
 
 - [x] Add a small `abc-player` acceptance checklist for `mikuscore` `abc-io.ts` syncs.
   - Confirm the public API used by `abc-player` is still compatible:
@@ -30,7 +30,7 @@
     - `convertAbcToMusicXml(abcSource)` when relevant to inherited upstream behavior
   - Confirm no new `abc-io.ts` dependencies require synchronized changes outside the intended upstream update slice.
   - Confirm `abc-player` still behaves correctly for its player-first workflow: load as ABC, preview, playback, lightweight inherited edit/export.
-  - Progress (2026-04-05): documented the checklist in [spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md).
+  - Progress (2026-04-05): documented the checklist in [spec/ABC_SYNC_CHECKLIST.md](spec/ABC_SYNC_CHECKLIST.md).
   - Progress (2026-04-06): confirmed the practical workflow is:
     - update vendored `mikuscore` first
     - run local gates
@@ -74,8 +74,8 @@
     - refine the acceptance policy into more concrete fixture-by-fixture rules
 
 - [x] Define which ABC output deltas are acceptable for `abc-player` and which should fail acceptance.
-  - Progress (2026-04-05): added [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md) as the first local acceptance policy.
-  - Progress (2026-04-05): connected acceptance-test clusters to explicit policy buckets in [spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md).
+  - Progress (2026-04-05): added [spec/ABC_ACCEPTANCE_POLICY.md](spec/ABC_ACCEPTANCE_POLICY.md) as the first local acceptance policy.
+  - Progress (2026-04-05): connected acceptance-test clusters to explicit policy buckets in [spec/ABC_ACCEPTANCE_POLICY.md](spec/ABC_ACCEPTANCE_POLICY.md).
   - Progress (2026-04-06): clarified that standard ABC spellings may replace redundant `%@mks` repeat metadata without counting as a regression, as long as roundtrip semantics remain intact.
   - Future refinement if needed:
     - tighten the boundary between "formatting-only acceptable delta" and "player-visible regression" if upstream change volume increases further

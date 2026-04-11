@@ -69,13 +69,13 @@ The successful working method was:
 
 Vendored files updated in practice:
 
-- [vendor/mikuscore/src/ts/abc-io.ts](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/src/ts/abc-io.ts)
-- [vendor/mikuscore/tests/unit/abc-io.spec.ts](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/tests/unit/abc-io.spec.ts)
-- [vendor/mikuscore/docs/spec/ABC_IO.md](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/docs/spec/ABC_IO.md)
-- [vendor/mikuscore/docs/spec/abc-compat-parser-ebnf.md](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/docs/spec/abc-compat-parser-ebnf.md)
-- [vendor/mikuscore/TODO.md](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/TODO.md)
-- [vendor/mikuscore/src/js/main.js](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/src/js/main.js)
-- [vendor/mikuscore/mikuscore.html](/Users/igapyon/Documents/git/abc-player/vendor/mikuscore/mikuscore.html)
+- [vendor/mikuscore/src/ts/abc-io.ts](../vendor/mikuscore/src/ts/abc-io.ts)
+- [vendor/mikuscore/tests/unit/abc-io.spec.ts](../vendor/mikuscore/tests/unit/abc-io.spec.ts)
+- [vendor/mikuscore/docs/spec/ABC_IO.md](../vendor/mikuscore/docs/spec/ABC_IO.md)
+- [vendor/mikuscore/docs/spec/abc-compat-parser-ebnf.md](../vendor/mikuscore/docs/spec/abc-compat-parser-ebnf.md)
+- [vendor/mikuscore/TODO.md](../vendor/mikuscore/TODO.md)
+- [vendor/mikuscore/src/js/main.js](../vendor/mikuscore/src/js/main.js)
+- [vendor/mikuscore/mikuscore.html](../vendor/mikuscore/mikuscore.html)
 
 ## What Broke
 
@@ -87,7 +87,7 @@ After the vendor update:
 The failures were not core runtime breakage.
 They were outdated downstream assertions in:
 
-- [tests/unit/abc-io-acceptance.spec.ts](/Users/igapyon/Documents/git/abc-player/tests/unit/abc-io-acceptance.spec.ts)
+- [tests/unit/abc-io-acceptance.spec.ts](../tests/unit/abc-io-acceptance.spec.ts)
 
 Specifically:
 
@@ -100,8 +100,8 @@ Specifically:
 
 The following did **not** require changes:
 
-- [src/ts/main.ts](/Users/igapyon/Documents/git/abc-player/src/ts/main.ts)
-- [src/ts/abc-player-integration.ts](/Users/igapyon/Documents/git/abc-player/src/ts/abc-player-integration.ts)
+- [src/ts/main.ts](../src/ts/main.ts)
+- [src/ts/abc-player-integration.ts](../src/ts/abc-player-integration.ts)
 - local selector / title / hidden-panel logic
 - sample-load integration path
 
@@ -238,7 +238,7 @@ This follow-up strengthens the practical conclusion from the earlier update:
 
 ## Related Documents
 
-- [docs/spec/ABC_SYNC_CHECKLIST.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_SYNC_CHECKLIST.md)
-- [docs/spec/ABC_ACCEPTANCE_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/spec/ABC_ACCEPTANCE_POLICY.md)
-- [docs/UPSTREAM_SYNC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_SYNC_POLICY.md)
-- [tests/unit/abc-io-acceptance.spec.ts](/Users/igapyon/Documents/git/abc-player/tests/unit/abc-io-acceptance.spec.ts)
+- [docs/spec/ABC_SYNC_CHECKLIST.md](spec/ABC_SYNC_CHECKLIST.md)
+- [docs/spec/ABC_ACCEPTANCE_POLICY.md](spec/ABC_ACCEPTANCE_POLICY.md)
+- [docs/UPSTREAM_SYNC_POLICY.md](UPSTREAM_SYNC_POLICY.md)
+- [tests/unit/abc-io-acceptance.spec.ts](../tests/unit/abc-io-acceptance.spec.ts)

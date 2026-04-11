@@ -1,6 +1,6 @@
-# Mikuku's abc-player
+# miku-abc-player
 
-`Mikuku's abc-player` is a single-file web app that can load multiple supported formats, open them as ABC, and let you preview, play back, and make lightweight adjustments locally. Non-ABC inputs are normalized through MusicXML before being presented as ABC, while export to MIDI and other score formats remains available via mikuscore-derived functionality.
+`miku-abc-player` is a single-file web app that can load multiple supported formats, open them as ABC, and let you preview, play back, and make lightweight adjustments locally. Non-ABC inputs are normalized through MusicXML before being presented as ABC, while export to MIDI and other score formats remains available via mikuscore-derived functionality.
 
 This project intentionally reuses and mimics `mikuscore` as much as practical.
 It is not starting from a blank architectural style.
@@ -18,7 +18,7 @@ Current focus:
 
 ## Product Goal
 
-`Mikuku's abc-player` provides a small, local, offline-capable ABC player with:
+`miku-abc-player` provides a small, local, offline-capable ABC player with:
 
 - ABC text input
 - ABC file input
@@ -42,7 +42,7 @@ The intention is:
 - reuse the `lht-cmn` UI component direction
 - stay close to the same TypeScript and test baseline
 
-`Mikuku's abc-player` is a smaller derived app, not a full clone of `mikuscore`.
+`miku-abc-player` is a smaller derived app, not a full clone of `mikuscore`.
 
 Its primary value is preview, playback, and quick verification, not strong score editing.
 
@@ -130,7 +130,7 @@ English: Output screen for exporting the current work as ABC, MIDI, MusicXML, an
 Current layout:
 
 ```text
-abc-player/
+miku-abc-player/
   README.md
   docs/
   src/
@@ -139,15 +139,15 @@ abc-player/
     mikuscore/
 ```
 
-The precise target layout is documented in [docs/MIMIC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/MIMIC_POLICY.md).
+The precise target layout is documented in [docs/MIMIC_POLICY.md](docs/MIMIC_POLICY.md).
 
 ## Documentation
 
-- [CHANGELOG.md](/Users/igapyon/Documents/git/abc-player/CHANGELOG.md)
-- [docs/README.md](/Users/igapyon/Documents/git/abc-player/docs/README.md)
-- [docs/MIMIC_POLICY.md](/Users/igapyon/Documents/git/abc-player/docs/MIMIC_POLICY.md)
-- [docs/PRODUCT_POSITIONING.md](/Users/igapyon/Documents/git/abc-player/docs/PRODUCT_POSITIONING.md)
-- [docs/UPSTREAM_PROFILE_STRATEGY.md](/Users/igapyon/Documents/git/abc-player/docs/UPSTREAM_PROFILE_STRATEGY.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [docs/README.md](docs/README.md)
+- [docs/MIMIC_POLICY.md](docs/MIMIC_POLICY.md)
+- [docs/PRODUCT_POSITIONING.md](docs/PRODUCT_POSITIONING.md)
+- [docs/UPSTREAM_PROFILE_STRATEGY.md](docs/UPSTREAM_PROFILE_STRATEGY.md)
 
 ## License
 

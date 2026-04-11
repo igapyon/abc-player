@@ -1,6 +1,6 @@
-# Contributing to abc-player
+# Contributing to miku-abc-player
 
-Thank you for contributing to `abc-player`.
+Thank you for contributing to `miku-abc-player`.
 
 This project accepts bug reports, feature requests, documentation fixes, tests, and pull requests.
 
@@ -13,8 +13,8 @@ This project accepts bug reports, feature requests, documentation fixes, tests, 
 
 ## Development Notes
 
-- `abc-player.html` is a generated file.
-- Edit `abc-player-src.html` and files under `src/` instead of editing generated output directly unless regeneration is intentionally part of the change.
+- `miku-abc-player.html` is a generated file.
+- Edit `miku-abc-player-src.html` and files under `src/` instead of editing generated output directly unless regeneration is intentionally part of the change.
 - `vendor/mikuscore/` is vendored upstream-derived code. Avoid editing it unless the change clearly requires it.
 - Run relevant tests before submitting a pull request when possible.
 
@@ -48,9 +48,9 @@ Contributors may be acknowledged in project history, release notes, or other pro
 
 ---
 
-# abc-player へのコントリビュート
+# miku-abc-player へのコントリビュート
 
-`abc-player` へのコントリビュートありがとうございます。
+`miku-abc-player` へのコントリビュートありがとうございます。
 
 このプロジェクトでは、バグ報告、機能提案、ドキュメント修正、テスト追加、Pull Request を受け付けます。
 
@@ -63,8 +63,8 @@ Contributors may be acknowledged in project history, release notes, or other pro
 
 ## 開発メモ
 
-- `abc-player.html` は生成物です。
-- 生成物を直接編集するのではなく、通常は `abc-player-src.html` と `src/` 配下を編集してください。
+- `miku-abc-player.html` は生成物です。
+- 生成物を直接編集するのではなく、通常は `miku-abc-player-src.html` と `src/` 配下を編集してください。
 - `vendor/mikuscore/` は upstream 由来の同梱コードです。明確な必要がない限り直接編集しないでください。
 - Pull Request 前に、可能な範囲で関連テストを実行してください。
 

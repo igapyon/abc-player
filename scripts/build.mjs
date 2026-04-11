@@ -5,11 +5,11 @@ import { execFileSync } from "node:child_process";
 const ROOT = process.cwd();
 const ENTRY_TS = "src/ts/main.ts";
 const ENTRY_JS = ENTRY_TS.replace(/\.ts$/, ".js");
-const TEMPLATE = "abc-player-src.html";
-const DIST = "abc-player.html";
+const TEMPLATE = "miku-abc-player-src.html";
+const DIST = "miku-abc-player.html";
 const INDEX_TEMPLATE = "index-src.html";
 const INDEX_DIST = "index.html";
-const TMP_DIR = ".abc-player-build";
+const TMP_DIR = ".miku-abc-player-build";
 
 const normalize = (p) => p.split(path.sep).join("/");
 const toAbs = (relPath) => path.join(ROOT, relPath);
