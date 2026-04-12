@@ -1,9 +1,15 @@
-# ABC Compat Parser EBNF (draft)
+# ABC Compat Parser EBNF
 
 ## English
-This document defines the grammar baseline for the project ABC parser.
+This document defines the current grammar baseline for the project ABC parser.
 
 It is based on ABC 2.1 and includes currently supported compatibility behavior observed in real-world `abcjs` / `abcm2ps` style inputs.
+
+Warning:
+
+- this document is a practical grammar baseline, not a fully synchronized dump of every parser helper and dispatch path in the current implementation
+- when this document and implementation detail appear to diverge, treat implementation, regression tests, and `docs/spec/ABC_IO.md` as the more authoritative source for the currently supported bounded behavior
+- update this document when the bounded grammar baseline changes materially, but do not assume every internal parser refactor requires line-by-line EBNF churn here
 
 The parser should be understood in three layers:
 
@@ -11,9 +17,38 @@ The parser should be understood in three layers:
 - compatibility behavior for real-world ABC variance
 - `mikuscore` extension metadata comments (`%@mks ...`) used for roundtrip support
 
+ABC is a supported format in `mikuscore`.
+This grammar therefore documents the implemented compatibility baseline for supported import behavior, rather than an experimental parser sketch.
+
+## Practical Interpretation
+
+ABC interoperability is influenced not only by the narrow core grammar, but also by de facto conventions widely seen in tools such as `abcjs` and `abcm2ps`.
+
+For that reason, this document should be read as:
+
+- a grammar baseline for the standard ABC surface actually implemented by `mikuscore`
+- a record of compatibility behavior accepted for common real-world inputs
+- not a promise that every informal ABC variant in the wild is accepted
+
+For `mikuscore`, `abcjs` / `abcm2ps` behavior is not itself the normative grammar.
+Instead, it is evidence for de facto interoperability expectations that may justify explicit compatibility rules in this document.
+
+De facto compatibility should therefore be understood as:
+
+- acceptable to adopt when a pattern is common enough in practice
+- acceptable to adopt when the intended musical meaning is sufficiently clear
+- required to be documented in spec text and regression tests once adopted
+- not a blanket reason to accept arbitrary malformed or ambiguous ABC
+
+When extending compatibility, the preferred policy is:
+
+- add support by recognizable pattern classes, not by one-off token hacks
+- keep directive/context parsing separate from body note parsing
+- fail clearly on input that is still structurally or musically uninterpretable after compatibility handling
+
 ## Scope
-- Header: `X,T,C,M,L,K,V` and `%%score`
-- Body: note/rest (`z/x`), accidentals, length, tie (`-`), broken rhythm (`>` `<`), barlines, chords, tuplets
+- Header: `X,T,C,M,L,K,U,V` and `%%score`
+- Body: note/rest (`z/x`), accidentals, length, tie (`-`), broken rhythm (`>` `<`), barlines, chords, tuplets, overlay (`&`)
 - Compatibility behavior: `M:C`, `M:C|`, inline text skip (`"..."`), standalone octave marker tolerance (`,` / `'`)
 - `mikuscore` extension metadata comments: `%@mks ...`
 
@@ -28,7 +63,7 @@ score_expr       = { score_group | voice_id | ws } ;
 score_group      = "(" , { ws | voice_id } , ")" ;
 
 header           = header_key , ":" , ws* , header_value ;
-header_key       = "X" | "T" | "C" | "M" | "L" | "K" | "V" | letter ;
+header_key       = "X" | "T" | "C" | "M" | "L" | "K" | "U" | "V" | letter ;
 header_value     = { any_char_except_newline } ;
 
 body             = { body_token | ws } ;
@@ -88,8 +123,14 @@ digit            = "0".."9" ;
 - Treat `x` rest as `z` rest.
 - Support chords (`[CEG]`, `[A,,CE]`).
 - Support tuplets (`(3abc`, `(5:4:5abcde`) with duration scaling.
+- Support overlay marker `&` by splitting the body stream into synthetic overlay voices at measure boundaries.
+- Support `U:` single-character user-defined decoration aliases on import by expanding them into regular decoration markers before parsing.
 - Ignore `:` in barline variants (`:|`, `|:`, `||`) without parse failure.
 - Ignore standalone `,` / `'` for compatibility.
+- Allow recognized bare `V:` clef shorthands such as `V:2 bass`, `V:1 treble C D |`, `V:1 c3`, and `V:2 c4`.
+- Prefer class-based compatibility rules derived from common `abcjs` / `abcm2ps` practice over one-off special cases.
+- Do not let unknown directive-tail fragments silently fall through into body note parsing.
+- Prefer warning on unsupported bare `V:` tail words over later note/rest parse failure caused by directive leftovers.
 
 ## `mikuscore` Extension Notes
 - Accept `%@mks` metadata comments (`key`, `measure`, `transpose`) and feed roundtrip metadata when present.

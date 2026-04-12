@@ -1,3 +1,8 @@
+/*
+ * Copyright 2026 Toshiki Iga
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {
   midiToPitch,
   resolveAccidentalTextForPitch,
@@ -120,13 +125,30 @@ const xmlEscape = (value: string): string =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+const directChildrenByTag = (parent: ParentNode, tagName: string): Element[] => {
+  const expected = tagName.trim().toLowerCase();
+  const children = "children" in parent ? Array.from(parent.children) : [];
+  return children.filter((child) => child.tagName.toLowerCase() === expected);
+};
+
+const firstDirectChildByTag = (parent: ParentNode, tagName: string): Element | null => {
+  return directChildrenByTag(parent, tagName)[0] ?? null;
+};
+
 const readFirstVBoxTextByStyle = (score: Element, styleName: string): string => {
   const lowerStyle = styleName.trim().toLowerCase();
-  const textNodes = Array.from(score.querySelectorAll(":scope > Staff > VBox > Text"));
+  const textNodes: Element[] = [];
+  for (const staff of directChildrenByTag(score, "Staff")) {
+    for (const vbox of directChildrenByTag(staff, "VBox")) {
+      for (const textNode of directChildrenByTag(vbox, "Text")) {
+        textNodes.push(textNode);
+      }
+    }
+  }
   for (const textNode of textNodes) {
-    const style = (textNode.querySelector(":scope > style")?.textContent ?? "").trim().toLowerCase();
+    const style = (firstDirectChildByTag(textNode, "style")?.textContent ?? "").trim().toLowerCase();
     if (style !== lowerStyle) continue;
-    const value = (textNode.querySelector(":scope > text")?.textContent ?? "").trim();
+    const value = (firstDirectChildByTag(textNode, "text")?.textContent ?? "").trim();
     if (value) return value;
   }
   return "";
@@ -147,7 +169,9 @@ const isMuseDefaultComposer = (composer: string): boolean => {
 };
 
 const readMetaTagValue = (score: Element, name: string): string => {
-  return (score.querySelector(`:scope > metaTag[name="${name}"]`)?.textContent ?? "").trim();
+  return (
+    directChildrenByTag(score, "metaTag").find((node) => (node.getAttribute("name") ?? "").trim() === name)?.textContent ?? ""
+  ).trim();
 };
 
 const firstNumber = (scope: ParentNode, selector: string): number | null => {
@@ -407,15 +431,20 @@ const inferKeyModeFromText = (raw: string | null | undefined): "major" | "minor"
 };
 
 const readGlobalMuseKeyMode = (score: Element): "major" | "minor" => {
+  const firstStaff = directChildrenByTag(score, "Staff")[0] ?? null;
+  const firstMeasure = firstStaff ? firstDirectChildByTag(firstStaff, "Measure") : null;
+  const firstVoice = firstMeasure ? firstDirectChildByTag(firstMeasure, "voice") : null;
   const explicit =
-    normalizeKeyMode(score.querySelector(":scope > Staff > Measure > KeySig > mode")?.textContent)
-    || normalizeKeyMode(score.querySelector(":scope > Staff > Measure > voice > KeySig > mode")?.textContent)
-    || normalizeKeyMode(score.querySelector(":scope > Staff > Measure > voice > keysig > mode")?.textContent);
+    normalizeKeyMode(firstMeasure?.querySelector("KeySig > mode")?.textContent)
+    || normalizeKeyMode(firstVoice?.querySelector("KeySig > mode")?.textContent)
+    || normalizeKeyMode(firstVoice?.querySelector("keysig > mode")?.textContent);
   if (explicit) return explicit;
   const inferred =
-    inferKeyModeFromText(score.querySelector(':scope > metaTag[name="workTitle"]')?.textContent)
-    || inferKeyModeFromText(score.querySelector(':scope > metaTag[name="movementTitle"]')?.textContent)
-    || inferKeyModeFromText(score.querySelector(":scope > Staff > VBox > Text > text")?.textContent);
+    inferKeyModeFromText(readMetaTagValue(score, "workTitle"))
+    || inferKeyModeFromText(readMetaTagValue(score, "movementTitle"))
+    || inferKeyModeFromText(
+      directChildrenByTag(score, "Staff")[0]?.querySelector("VBox > Text > text")?.textContent
+    );
   return inferred || "major";
 };
 
@@ -583,11 +612,11 @@ type ParsedMuseScorePart = {
 
 const readPartNameFromMusePart = (part: Element, fallback: string): string => {
   const candidate =
-    (part.querySelector(":scope > trackName")?.textContent ?? "").trim()
-    || (part.querySelector(":scope > Instrument > longName")?.textContent ?? "").trim()
-    || (part.querySelector(":scope > Instrument > trackName")?.textContent ?? "").trim()
-    || (part.querySelector(":scope > Instrument > shortName")?.textContent ?? "").trim()
-    || (part.querySelector(":scope > Instrument > instrumentId")?.textContent ?? "").trim();
+    (part.querySelector("trackName")?.textContent ?? "").trim()
+    || (part.querySelector("Instrument > longName")?.textContent ?? "").trim()
+    || (part.querySelector("Instrument > trackName")?.textContent ?? "").trim()
+    || (part.querySelector("Instrument > shortName")?.textContent ?? "").trim()
+    || (part.querySelector("Instrument > instrumentId")?.textContent ?? "").trim();
   return candidate || fallback;
 };
 
@@ -603,16 +632,52 @@ const readPartTransposeFromMusicXml = (part: Element): { diatonic?: number; chro
 };
 
 const readPartTransposeFromMusePart = (part: Element): { diatonic?: number; chromatic?: number } | null => {
-  const diatonic = firstNumber(part, ":scope > Instrument > transposeDiatonic")
-    ?? firstNumber(part, ":scope > Instrument > mksTransposeDiatonic")
-    ?? firstNumber(part, ":scope > transpose > diatonic");
-  const chromatic = firstNumber(part, ":scope > Instrument > transposeChromatic")
-    ?? firstNumber(part, ":scope > Instrument > mksTransposeChromatic")
-    ?? firstNumber(part, ":scope > transpose > chromatic");
+  const diatonic = firstNumber(part, "Instrument > transposeDiatonic")
+    ?? firstNumber(part, "transpose > diatonic");
+  const chromatic = firstNumber(part, "Instrument > transposeChromatic")
+    ?? firstNumber(part, "transpose > chromatic");
   const out: { diatonic?: number; chromatic?: number } = {};
   if (Number.isFinite(diatonic)) out.diatonic = Math.round(Number(diatonic));
   if (Number.isFinite(chromatic)) out.chromatic = Math.round(Number(chromatic));
   return Object.keys(out).length ? out : null;
+};
+
+const readMuseKeyFifths = (
+  node: Element,
+  options: { transposingPart: boolean; descendantPrefix?: string } = { transposingPart: false }
+): number | null => {
+  const prefix = options.descendantPrefix ? `${options.descendantPrefix} ` : "";
+  const read = (field: "transposeKey" | "accidental" | "concertKey"): number | null => (
+    firstNumber(node, `${prefix}KeySig > ${field}`)
+    ?? firstNumber(node, `${prefix}voice > KeySig > ${field}`)
+    ?? firstNumber(node, `${prefix}voice > keysig > ${field}`)
+  );
+  const transposeKey = read("transposeKey");
+  const accidental = read("accidental");
+  const concertKey = read("concertKey");
+  const resolved = options.transposingPart
+    ? (transposeKey ?? accidental ?? concertKey)
+    : (accidental ?? concertKey ?? transposeKey);
+  if (resolved === null || !Number.isFinite(resolved)) return null;
+  return Math.max(-7, Math.min(7, Math.round(resolved)));
+};
+
+const normalizeKeyFifthsToMuseRange = (fifths: number): number => {
+  if (!Number.isFinite(fifths)) return 0;
+  let normalized = Math.round(fifths);
+  while (normalized > 7) normalized -= 12;
+  while (normalized < -7) normalized += 12;
+  return normalized;
+};
+
+const resolveMuseExportKeySigXml = (writtenFifths: number, transpose: { diatonic?: number; chromatic?: number } | null): string => {
+  const normalizedWritten = normalizeKeyFifthsToMuseRange(writtenFifths);
+  const chromatic = Number.isFinite(transpose?.chromatic) ? Math.round(Number(transpose?.chromatic)) : null;
+  if (chromatic === null) {
+    return `<KeySig><accidental>${normalizedWritten}</accidental><concertKey>${normalizedWritten}</concertKey></KeySig>`;
+  }
+  const concertKey = normalizeKeyFifthsToMuseRange(normalizedWritten + (7 * chromatic));
+  return `<KeySig><accidental>${normalizedWritten}</accidental><concertKey>${concertKey}</concertKey><transposeKey>${normalizedWritten}</transposeKey></KeySig>`;
 };
 
 const buildTransposeXml = (transpose: { diatonic?: number; chromatic?: number } | null): string => {
@@ -647,12 +712,12 @@ const parseMuseClefText = (raw: string): { sign: "G" | "F" | "C"; line: number }
 
 const readClefForMuseStaff = (staff: Element): { sign: "G" | "F" | "C"; line: number } => {
   const clefTypeText =
-    (staff.querySelector(":scope > Measure > voice > Clef > concertClefType")?.textContent ?? "").trim()
-    || (staff.querySelector(":scope > Measure > voice > Clef > subtype")?.textContent ?? "").trim()
-    || (staff.querySelector(":scope > Measure > Clef > concertClefType")?.textContent ?? "").trim()
-    || (staff.querySelector(":scope > Measure > Clef > subtype")?.textContent ?? "").trim()
-    || (staff.querySelector(":scope > Clef > concertClefType")?.textContent ?? "").trim()
-    || (staff.querySelector(":scope > Clef > subtype")?.textContent ?? "").trim();
+    (staff.querySelector("Measure > voice > Clef > concertClefType")?.textContent ?? "").trim()
+    || (staff.querySelector("Measure > voice > Clef > subtype")?.textContent ?? "").trim()
+    || (staff.querySelector("Measure > Clef > concertClefType")?.textContent ?? "").trim()
+    || (staff.querySelector("Measure > Clef > subtype")?.textContent ?? "").trim()
+    || (staff.querySelector("Clef > concertClefType")?.textContent ?? "").trim()
+    || (staff.querySelector("Clef > subtype")?.textContent ?? "").trim();
   const parsed = parseMuseClefText(clefTypeText);
   if (parsed) return parsed;
   return { sign: "G", line: 2 };
@@ -663,18 +728,18 @@ const readStaffClefOverridesFromMusePart = (
   fallbackStaffIds: string[] = []
 ): Map<string, { sign: "G" | "F" | "C"; line: number }> => {
   const overrides = new Map<string, { sign: "G" | "F" | "C"; line: number }>();
-  const partStaffDefs = Array.from(part.querySelectorAll(":scope > Staff"));
+  const partStaffDefs = directChildrenByTag(part, "Staff");
   for (let i = 0; i < partStaffDefs.length; i += 1) {
     const staffDef = partStaffDefs[i];
     const explicitId = (staffDef.getAttribute("id") ?? "").trim();
     const staffId = explicitId || (fallbackStaffIds[i] ?? "");
     if (!staffId) continue;
-    const defaultClef = (staffDef.querySelector(":scope > defaultClef")?.textContent ?? "").trim().toUpperCase();
+    const defaultClef = (staffDef.querySelector("defaultClef")?.textContent ?? "").trim().toUpperCase();
     const parsed = parseMuseClefText(defaultClef);
     if (!parsed) continue;
     overrides.set(staffId, parsed);
   }
-  for (const clefDef of Array.from(part.querySelectorAll(":scope > Instrument > clef[staff]"))) {
+  for (const clefDef of Array.from(part.querySelectorAll("Instrument > clef[staff]"))) {
     const staffId = (clefDef.getAttribute("staff") ?? "").trim();
     if (!staffId) continue;
     const clef = (clefDef.textContent ?? "").trim().toUpperCase();
@@ -682,7 +747,7 @@ const readStaffClefOverridesFromMusePart = (
     if (!parsed) continue;
     overrides.set(staffId, parsed);
   }
-  const instrumentDefaultClef = (part.querySelector(":scope > Instrument > clef:not([staff])")?.textContent ?? "").trim();
+  const instrumentDefaultClef = (part.querySelector("Instrument > clef:not([staff])")?.textContent ?? "").trim();
   const parsedInstrumentDefaultClef = parseMuseClefText(instrumentDefaultClef);
   if (parsedInstrumentDefaultClef && fallbackStaffIds[0]) {
     const targetStaffId = fallbackStaffIds[0];
@@ -947,17 +1012,14 @@ export const convertMuseScoreToMusicXml = (
     ? composerMeta
     : (!isMuseDefaultComposer(composerFromVBox) ? composerFromVBox : "");
 
-  const globalBeats = Math.max(1, Math.round(firstNumber(score, ":scope > Staff > Measure > TimeSig > sigN") ?? 4));
-  const globalBeatType = Math.max(1, Math.round(firstNumber(score, ":scope > Staff > Measure > TimeSig > sigD") ?? 4));
-  const globalFifths = Math.max(
-    -7,
-    Math.min(7, Math.round(firstNumber(score, ":scope > Staff > Measure > KeySig > accidental") ?? 0))
-  );
+  const globalBeats = Math.max(1, Math.round(firstNumber(score, "Staff > Measure > TimeSig > sigN") ?? 4));
+  const globalBeatType = Math.max(1, Math.round(firstNumber(score, "Staff > Measure > TimeSig > sigD") ?? 4));
+  const globalFifths = readMuseKeyFifths(score, { transposingPart: false, descendantPrefix: "Staff > Measure >" }) ?? 0;
   const globalMode = readGlobalMuseKeyMode(score);
 
-  const staffNodes = Array.from(score.querySelectorAll(":scope > Staff")).filter((staff) => {
+  const staffNodes = directChildrenByTag(score, "Staff").filter((staff) => {
     if ((staff.parentElement?.tagName ?? "").toLowerCase() !== "score") return false;
-    return staff.querySelector(":scope > Measure") !== null;
+    return staff.querySelector("Measure") !== null;
   });
   const staffById = new Map<string, Element>();
   staffNodes.forEach((staff, index) => {
@@ -985,7 +1047,7 @@ export const convertMuseScoreToMusicXml = (
   const applyImplicitBeams = options.applyImplicitBeams !== false;
 
   const usedStaffIds = new Set<string>();
-  const partNodes = Array.from(score.querySelectorAll(":scope > Part")).filter(
+  const partNodes = directChildrenByTag(score, "Part").filter(
     (part) => (part.parentElement?.tagName ?? "").toLowerCase() === "score"
   );
   const groupedStaffIds: Array<{ partName: string; staffIds: string[]; partEl: Element | null }> = [];
@@ -994,7 +1056,7 @@ export const convertMuseScoreToMusicXml = (
   for (let partIndex = 0; partIndex < partNodes.length; partIndex += 1) {
     const part = partNodes[partIndex];
     const partName = readPartNameFromMusePart(part, `P${partIndex + 1}`);
-    const partStaffDefs = Array.from(part.querySelectorAll(":scope > Staff"));
+    const partStaffDefs = directChildrenByTag(part, "Staff");
     const explicitIds = partStaffDefs
       .map((staffEl) => (staffEl.getAttribute("id") ?? "").trim())
       .filter((id) => id.length > 0 && staffById.has(id));
@@ -1030,6 +1092,7 @@ export const convertMuseScoreToMusicXml = (
     const group = groupedStaffIds[partIndex];
     const partId = `P${partIndex + 1}`;
     const parsedStaffs: ParsedMuseScoreStaff[] = [];
+    const partTranspose = group.partEl ? readPartTransposeFromMusePart(group.partEl) : null;
     const partClefOverrides = group.partEl
       ? readStaffClefOverridesFromMusePart(group.partEl, group.staffIds)
       : new Map<string, { sign: "G" | "F" | "C"; line: number }>();
@@ -1039,7 +1102,7 @@ export const convertMuseScoreToMusicXml = (
       const staff = staffById.get(sourceStaffId) ?? doc.createElement("Staff");
       const clef = partClefOverrides.get(sourceStaffId) ?? readClefForMuseStaff(staff);
 
-      const measures = Array.from(staff.querySelectorAll(":scope > Measure"));
+      const measures = directChildrenByTag(staff, "Measure");
       if (!measures.length) {
         parsedStaffs.push({
           sourceStaffId,
@@ -1074,7 +1137,8 @@ export const convertMuseScoreToMusicXml = (
       let currentBeats = globalBeats;
       let currentBeatType = globalBeatType;
       let currentTimeSymbol: "cut" | null = null;
-      let currentFifths = globalFifths;
+      let currentFifths = readMuseKeyFifths(staff, { transposingPart: partTranspose !== null, descendantPrefix: "Measure >" })
+        ?? globalFifths;
       let currentMode = globalMode;
       const parsedMeasures: ParsedMuseScoreMeasure[] = [];
       let absoluteDivCursor = 0;
@@ -1117,10 +1181,8 @@ export const convertMuseScoreToMusicXml = (
       const measureLenDiv = parseMeasureLenToDivisions(measure, divisions);
       const capacityDiv = measureLenDiv ?? nominalCapacityDiv;
       const implicit = measureLenDiv !== null && measureLenDiv < nominalCapacityDiv;
-      const fifthsRaw = firstNumber(measure, ":scope > KeySig > accidental")
-        ?? firstNumber(measure, ":scope > voice > KeySig > accidental")
-        ?? firstNumber(measure, ":scope > voice > keysig > accidental");
-      const fifths = fifthsRaw === null ? currentFifths : Math.max(-7, Math.min(7, Math.round(fifthsRaw)));
+      const fifthsRaw = readMuseKeyFifths(measure, { transposingPart: partTranspose !== null });
+      const fifths = fifthsRaw === null ? currentFifths : fifthsRaw;
       const modeRaw = normalizeKeyMode(
         measure.querySelector(":scope > KeySig > mode")?.textContent
         ?? measure.querySelector(":scope > voice > KeySig > mode")?.textContent
@@ -1240,11 +1302,11 @@ export const convertMuseScoreToMusicXml = (
         const children = Array.from(holder.children);
         for (const event of children) {
           const tag = event.tagName.toLowerCase();
-          const trackNo = Math.round(firstNumber(event, ":scope > track") ?? NaN);
+          const trackNo = Math.round(firstNumber(event, "track") ?? NaN);
           const voiceNo = Number.isFinite(trackNo)
             ? Math.max(1, Math.min(4, (Math.max(0, trackNo) % 4) + 1))
             : defaultVoiceNo;
-          const moveRaw = Math.round(firstNumber(event, ":scope > move") ?? NaN);
+          const moveRaw = Math.round(firstNumber(event, "move") ?? NaN);
           const movedStaffNo = Number.isFinite(moveRaw)
             ? Math.max(1, localStaffIndex + 1 + Math.round(moveRaw))
             : (localStaffIndex + 1);
@@ -1254,10 +1316,10 @@ export const convertMuseScoreToMusicXml = (
             continue;
           }
           if (tag === "tuplet") {
-            const normalNotes = Math.round(firstNumber(event, ":scope > normalNotes") ?? 0);
-            const actualNotes = Math.round(firstNumber(event, ":scope > actualNotes") ?? 0);
-            const numberType = Math.round(firstNumber(event, ":scope > numberType") ?? NaN);
-            const bracketType = Math.round(firstNumber(event, ":scope > bracketType") ?? NaN);
+            const normalNotes = Math.round(firstNumber(event, "normalNotes") ?? 0);
+            const actualNotes = Math.round(firstNumber(event, "actualNotes") ?? 0);
+            const numberType = Math.round(firstNumber(event, "numberType") ?? NaN);
+            const bracketType = Math.round(firstNumber(event, "bracketType") ?? NaN);
             const showNumber = Number.isFinite(numberType)
               ? (numberType === 2 ? "none" as const : "actual" as const)
               : undefined;
@@ -1309,7 +1371,7 @@ export const convertMuseScoreToMusicXml = (
           if (tag === "rest") {
             const parsed = parseDurationDiv(event, divisions, capacityDiv);
             const displayDurationDiv = parsed === null ? null : Math.max(1, Math.round(parsed));
-            const tupletRefId = (event.querySelector(":scope > Tuplet")?.textContent ?? "").trim() || null;
+            const tupletRefId = (event.querySelector("Tuplet")?.textContent ?? "").trim() || null;
             const tupletRef = tupletRefId ? tupletDefinitionById.get(tupletRefId) : undefined;
             const tupletScale = tupletRef
               ? (tupletRef.normalNotes / tupletRef.actualNotes)
@@ -1348,7 +1410,7 @@ export const convertMuseScoreToMusicXml = (
               });
               activeTupletRefId = tupletRefId;
             }
-            const beamModeRaw = (event.querySelector(":scope > BeamMode")?.textContent ?? "").trim().toLowerCase();
+            const beamModeRaw = (event.querySelector("BeamMode")?.textContent ?? "").trim().toLowerCase();
             const beamMode = beamModeRaw === "begin" || beamModeRaw === "mid" ? beamModeRaw : undefined;
             events.push({
               kind: "rest",
@@ -1369,12 +1431,12 @@ export const convertMuseScoreToMusicXml = (
             continue;
           }
           if (tag === "chord") {
-            const isAcciaccatura = event.querySelector(":scope > acciaccatura") !== null;
-            const isAppoggiatura = event.querySelector(":scope > appoggiatura") !== null;
-            const isGrace = isAcciaccatura || isAppoggiatura || event.querySelector(":scope > grace") !== null;
+            const isAcciaccatura = event.querySelector("acciaccatura") !== null;
+            const isAppoggiatura = event.querySelector("appoggiatura") !== null;
+            const isGrace = isAcciaccatura || isAppoggiatura || event.querySelector("grace") !== null;
             const parsed = parseDurationDiv(event, divisions, capacityDiv);
             const displayDurationDiv = parsed === null ? null : Math.max(1, Math.round(parsed));
-            const tupletRefId = (event.querySelector(":scope > Tuplet")?.textContent ?? "").trim() || null;
+            const tupletRefId = (event.querySelector("Tuplet")?.textContent ?? "").trim() || null;
             const tupletRef = tupletRefId ? tupletDefinitionById.get(tupletRefId) : undefined;
             const tupletScale = tupletRef
               ? (tupletRef.normalNotes / tupletRef.actualNotes)
@@ -1536,7 +1598,7 @@ export const convertMuseScoreToMusicXml = (
               });
               activeTupletRefId = tupletRefId;
             }
-            const beamModeRaw = (event.querySelector(":scope > BeamMode")?.textContent ?? "").trim().toLowerCase();
+            const beamModeRaw = (event.querySelector("BeamMode")?.textContent ?? "").trim().toLowerCase();
             const beamMode = beamModeRaw === "begin" || beamModeRaw === "mid" ? beamModeRaw : undefined;
             events.push({
               kind: "chord",
@@ -1829,7 +1891,6 @@ export const convertMuseScoreToMusicXml = (
         measures: parsedMeasures,
       });
     }
-    const partTranspose = group.partEl ? readPartTransposeFromMusePart(group.partEl) : null;
     parsedByPart.push({ partId, partName: group.partName, transpose: partTranspose, staffs: parsedStaffs });
   }
 
@@ -3207,7 +3268,7 @@ export const exportMusicXmlDomToMuseScore = (doc: Document, options: MuseScoreEx
         return `<clef staff="${staffNo}">${museClef}</clef>`;
       })
       .join("");
-    const instrumentTransposeXml = `${Number.isFinite(partTranspose?.diatonic) ? `<transposeDiatonic>${Math.round(Number(partTranspose?.diatonic))}</transposeDiatonic><mksTransposeDiatonic>${Math.round(Number(partTranspose?.diatonic))}</mksTransposeDiatonic>` : ""}${Number.isFinite(partTranspose?.chromatic) ? `<transposeChromatic>${Math.round(Number(partTranspose?.chromatic))}</transposeChromatic><mksTransposeChromatic>${Math.round(Number(partTranspose?.chromatic))}</mksTransposeChromatic>` : ""}`;
+    const instrumentTransposeXml = `${Number.isFinite(partTranspose?.diatonic) ? `<transposeDiatonic>${Math.round(Number(partTranspose?.diatonic))}</transposeDiatonic>` : ""}${Number.isFinite(partTranspose?.chromatic) ? `<transposeChromatic>${Math.round(Number(partTranspose?.chromatic))}</transposeChromatic>` : ""}`;
     const instrumentNameXml = `<trackName>${xmlEscape(partName)}</trackName><longName>${xmlEscape(partName)}</longName>${partAbbreviation ? `<shortName>${xmlEscape(partAbbreviation)}</shortName>` : ""}`;
     const instrumentXml = `<Instrument>${instrumentNameXml}${instrumentClefXml}${instrumentTransposeXml}</Instrument>`;
     const partStaffDefsXml = staffIds
@@ -3342,7 +3403,7 @@ export const exportMusicXmlDomToMuseScore = (doc: Document, options: MuseScoreEx
               voiceXml += `<TimeSig>${cutSubtypeXml}<sigN>${effectiveMeasureBeats}</sigN><sigD>${effectiveMeasureBeatType}</sigD></TimeSig>`;
             }
             if (shouldWriteKey) {
-              voiceXml += `<KeySig><accidental>${measureFifths}</accidental></KeySig>`;
+              voiceXml += resolveMuseExportKeySigXml(measureFifths, partTranspose);
             }
             if (needsDoubleBarlineAtMeasureStart) {
               voiceXml += `<BarLine><subtype>double</subtype></BarLine>`;
