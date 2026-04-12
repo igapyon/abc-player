@@ -33,3 +33,5 @@ Note 向けの記事管理用 Markdown 置き場です。公開済み記事の�
 
 - `TEMPLATE.md`
   - Note 記事テンプレートです。背景や体験を主役にした構成を含みます
+- `20260412-miku-abc-player-intro.md`
+  - `miku-abc-player` の出発点になった小さな不便と、素朴な使いどころを背景寄りに書いた下書きです
