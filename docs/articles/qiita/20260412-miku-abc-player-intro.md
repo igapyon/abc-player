@@ -1,59 +1,14 @@
-# `miku-abc-player` 紹介記事メモ
-
-## 記事テーマ
-
-- `miku-abc-player` の最初の記事として、まずは素朴な使い方紹介を書く
-- 主役は「見つけた `ABC` を五線譜としてグラフィカルに見たい」という素朴な動機に置く
-- 再生、他形式への変換、他形式入力は二段目の価値として扱う
-- `mikuscore` 由来の構造や派生理由の話は、必要最小限にとどめる
-- 開発体験や生成AIの話は別記事に分ける
-
-## この記事で伝えたいこと
-
-- `miku-abc-player` の主要な魅力は、`ABC` 記譜法の譜面を五線譜としてグラフィカルに確認できること
-- ブラウザだけで、譜面プレビューと再生、必要に応じた変換まで進められる
-- 入力は `ABC` 中心で、まず使ってみるハードルが低い
-- 実は `ABC` 以外のいくつかの譜面形式も読み込んで、`ABC` に寄せて扱える
-- おまけのように見えて、生成AI と `ABC` 譜面をやり取りするときの確認場所としても役に立つ
-
-## この記事で採る観点
-
-- 最初の記事なので、実装説明より使い方説明を優先する
-- 最初の入口は「手元や Web で見つけた `ABC` を五線譜で見たい」に置く
-- 再生や変換は、「見えたあとにできること」として紹介する
-- 他形式入力は「さらにできること」として後段で紹介する
-- 生成AI との連携は主役にせず、最後に「こういう使い方にも効く」と軽く添える
-- 画面遷移や操作手順を素直に書く
-- 「どう便利か」は、実際の利用シーンに近い粒度で示す
-- 細かい技術説明は次の記事へ逃がす
-
-## 見出し案
-
-- はじめに
-- `miku-abc-player` で何ができるのか
-- まず `ABC` を五線譜で見られるのがうれしい
-- 基本の使い方
-- `ABC` 以外の譜面形式も読み込める
-- どんなときに便利か
-- 制約と今後
-- まとめ
-
-----------------------------------------------------------------
-
 ## 掲載先情報
 
 - 掲載先: Qiita
-- 公開記事タイトル: （未記入）
-- URL: （未記入）
-- スクリーンショット挿入: Qiita に直接アップロード方式 / 未確認
+- URL: https://qiita.com/igapyon/items/74c896c7dab9a78ba2f4
 
-## Qiita 掲載用属性情報
-
-- タイトル: `ABC` を貼ると譜面を見て再生できる `miku-abc-player` を作りました
-- タグ: `ABC`, `楽譜`, `TypeScript`, `WebApp`
-
-----------------------------------------------------------------
-
+---
+title: [miku-abc-player] `ABC` を貼ると譜面を見て再生できる `miku-abc-player` を作りました
+tags: abc ABC記譜法 楽譜 TypeScript mikuku
+author: igapyon
+slide: false
+---
 ## はじめに
 
 Web や手元で見つけた `ABC` 記譜法の譜面を、「これ、五線譜で見られたら分かりやすいのに」と思うことがあります。
@@ -119,11 +74,25 @@ Web や手元で見つけた `ABC` 記譜法の譜面を、「これ、五線譜
 4. `Score` 画面で五線譜を確認します
 5. 必要に応じて簡易再生します
 
-`ABC` ファイルが手元にある場合は、`File input` から開くこともできます。
+手順2 の miku-abc-player に ABC記譜法の譜面を貼ったところ
+
+![https___qiita-image-store.s3.ap-northeast-1.amazonaws.com_0_105739_e8d67456-7112-416a-b723-4410dbcf5138 (1).png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/42223fd4-cfd8-47d8-b17e-2c1042b96405.png)
+
+手順4の 五線譜の形式で表示しているところ
+
+![https___qiita-image-store.s3.ap-northeast-1.amazonaws.com_0_105739_a3809d43-552e-4fb7-9ce5-21a2ffc0e8bd.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/e15289bf-595b-45e5-a882-206804504b1d.png)
+
+`ABC` ファイルが手元にある場合は、`Input` の `Load from file` から開くこともできます。
+
+![InputのLoad from file](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/87855646-0552-47b0-be96-5a704b666679.png)
 
 また、URL クエリ `?abc=` を使って `ABC` を渡せるので、リンク経由でそのまま開く使い方もできます。（適宜 URL エンコーディングの実施が必要です）
 
 必要に応じて `Output` 画面から、別の譜面関連形式へ書き出すこともできます。
+
+![Output から他形式への出力が可能](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/44a99908-a913-46c6-8f64-88707acf2286.png)
+
+※VSQX, MEI, LilyPond 対応は限定的なものです（テストが足りていないため）
 
 ## `ABC` 以外の譜面形式も読み込める
 
@@ -201,3 +170,31 @@ Web や手元で見つけた `ABC` 記譜法の譜面を、「これ、五線譜
 ## 使用した生成AI
 
 - `VS Code` + `GPT-5.4`
+
+## Appendix
+
+### 記事中で使用した ABC譜面
+
+```
+X:1
+T:String Quartet No.15 K.421 Mvt.1
+C:Wolfgang Amadeus Mozart
+M:4/4
+L:1/8
+Q:1/4=96
+K:C
+V:P1 name="Violin 1" clef=treble
+V:P2 name="Violin 2" clef=treble
+V:P3 name="Viola" clef=alto
+V:P4 name="Violoncello" clef=bass
+
+V:P1
+"Allegretto moderato"(d4 D3) D | !trill!D3/2 ^C/ D D (D3 f) | (f2 f/ e/) (d/ ^c/) (_B2 A) G | !wedge!F (_B A ^G) A2 z2 | !f!(d'4 d3) d | !trill!d3/2 ^c/ d d (d3 f') | (f'2 f'/ e'/) !p!(d'/ ^c'/) (_b2 a) (g | g/ f/ e/ _b/) (_b/ a/) (^c/ e/) d2 z2 | !f!A,3 !p!a !trill!g3/2 a/ _b !wedge!^c | !wedge!d !wedge!e (g !trill!f) e2 z2 | !f!A,3 !p!d' (d'2 ^c') !wedge!_b | !wedge!a !wedge!g (g !trill!f) e/ (^g/ a/ ^g/ a/ ^g/ a/ f/) | e z z2 z4 | z4 !f![Ec_b]3 !p!(C | C) !wedge!C z2 z4 |
+V:P2
+z (!staccato!A, !staccato!A, !staccato!A,) z (!staccato!A, !staccato!A, !staccato!A,) | z (!staccato!_B, !staccato!_B, !staccato!_B,) z !wedge!F (F D) | z (D ^C E) z (!staccato!^C !staccato!^C !staccato!^C) | !wedge!D (G F E F G F E) | !f!D (!staccato!A !staccato!A !staccato!A) z (!staccato!A !staccato!A !staccato!A) | z (!staccato!D !staccato!D !staccato!D) z !wedge!f (f d) | (d2 d/ ^c/) !p!(f/ e/) (g2 f) e | A (_B/ G/) (G/ F/) (E/ G/) F2 z2 | !f!A,3 !p!d (d2 ^c) !wedge!_B | !wedge!A (A e !trill!d) ^c2 z2 | !f!A,3 !p!a !trill!g3/2 a/ _b !wedge!^c | !wedge!d !wedge!e (e !trill!d) ^c2 z (f/ d/) | ^c/ (^G/ A/ ^G/ A/ ^G/ A/ F/) E z z2 | z4 !f![Ecg]3 !p!!wedge!_B, | (_B, A,) z2 z4 |
+V:P3
+z (!staccato!F, !staccato!F, !staccato!F,) z (!staccato!F, !staccato!F, !staccato!F,) | z (!staccato!F, !staccato!F, !staccato!F,) z (!staccato!A, !staccato!A, !staccato!A,) | z (!staccato!_B, !staccato!_B, !staccato!_B,) z (!staccato!E, !staccato!E, !staccato!E,) | D,2 z2 z (E D ^C) | !f!D (!staccato!F !staccato!F !staccato!F) z (!staccato!^F !staccato!^F !staccato!^F) | z (!staccato!G !staccato!G !staccato!G) z (!staccato!^G !staccato!^G !staccato!^G) | (^G2 A2) z !p!(A, B, ^C) | D G, A, A, D2 z2 | z3 !p!F !trill!E3/2 F/ G G | (F E D) z z !mf!(A/ ^G/ A/ ^G/ A/ ^G/) | !f!A3 !p!F !trill!E3/2 F/ G G | !wedge!F (!wedge!A2 B) E2 z2 | z2 z (F/ D/) ^C/ (^G,/ A,/ ^G,/ A,/ ^G,/ A,/ F,/) | E, z z2 !f![C,C]3 !p!(!wedge!G, | F,) !wedge!F, z2 z4 |
+V:P4
+(D,4 C,4 | _B,,4 A,,4 | G,,4 A,,4) | D,,2 z2 z4 | z !f!(!staccato!D !staccato!D !staccato!D) z (!staccato!C !staccato!C !staccato!C) | z (!staccato!B, !staccato!B, !staccato!B,) z (!staccato!_B, !staccato!_B, !staccato!_B,) | A,4 z4 | z2 z2 z !f!!wedge!A, !wedge!F, !wedge!D, | !f!A,, !p!A, A, A, A, A, A, A, | (A, ^C D ^G, A,2) z2 | !f!A,, !p!A, A, A, A, A, A, A, | (A, ^C D ^G, A,2) z2 | z2 z2 z2 z (F,/ D,/) | ^C,/ (^G,,/ A,,/ ^G,,/ A,,/ ^G,,/ A,,/ F,,/) E,,3 !p!(!wedge!E, | _E,) !wedge!_E, z2 z4 |
+```
+
