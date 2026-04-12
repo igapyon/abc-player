@@ -6,6 +6,8 @@ Documentation currently centers on product scope, upstream sync policy, and impl
 
 ## Current Documents
 
+- [articles/README.md](articles/README.md)
+  - Qiita / Note 向けの記事原稿、構成メモ、下書き置き場
 - [../CHANGELOG.md](../CHANGELOG.md)
   - records project-level change history and user-visible benefits of updates
 - [../THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)
